@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 public class App {
 
     public static void main(String ... args) {
-        System.out.println("----- jpipe started -------");
+        System.out.println("----- jpipe started with args: " + String.join(", ", args));
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String line;
             while (true) {
