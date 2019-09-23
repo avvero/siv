@@ -30,8 +30,8 @@ public class FeatureParser extends GherkinBaseListener {
         Feature feature = new Feature();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
-            if (child instanceof GherkinParser.PhraseContext) {
-                feature.setSentence(parse((GherkinParser.PhraseContext) child));
+            if (child instanceof GherkinParser.SentenceContext) {
+                feature.setSentence(parse((GherkinParser.SentenceContext) child));
             } else if (child instanceof GherkinParser.ScenarioContext) {
                 Scenario scenario = parse((GherkinParser.ScenarioContext) child);
                 feature.getScenarios().add(scenario);
@@ -50,8 +50,8 @@ public class FeatureParser extends GherkinBaseListener {
         Scenario scenario = new Scenario();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
-            if (child instanceof GherkinParser.PhraseContext) {
-                scenario.setSentence(parse((GherkinParser.PhraseContext) child));
+            if (child instanceof GherkinParser.SentenceContext) {
+                scenario.setSentence(parse((GherkinParser.SentenceContext) child));
             } else if (child instanceof GherkinParser.StepContext) {
                 Step step = parse((GherkinParser.StepContext) child);
                 scenario.getSteps().add(step);
@@ -69,8 +69,8 @@ public class FeatureParser extends GherkinBaseListener {
     private Step parse(GherkinParser.StepContext tree) {
         Step step = new Step();
         for (ParseTree child : tree.children) {
-            if (child instanceof GherkinParser.PhraseContext) {
-                step.setSentence(parse((GherkinParser.PhraseContext) child));
+            if (child instanceof GherkinParser.SentenceContext) {
+                step.setSentence(parse((GherkinParser.SentenceContext) child));
             }
         }
         return step;
@@ -79,14 +79,14 @@ public class FeatureParser extends GherkinBaseListener {
     /**
      * Parsers phrase
      *
-     * @param phraseContext
+     * @param SentenceContext
      * @return
      */
-    private Sentence parse(GherkinParser.PhraseContext phraseContext) {
+    private Sentence parse(GherkinParser.SentenceContext SentenceContext) {
         Sentence sentence = new Sentence();
         List<String> originalPhraseParts = new ArrayList<>();
         List<String> templatePhraseParts = new ArrayList<>();
-        for (ParseTree child : phraseContext.children) {
+        for (ParseTree child : SentenceContext.children) {
             originalPhraseParts.add(child.getText());
             if (child instanceof GherkinParser.VariableContext) {
                 templatePhraseParts.add("\\w+");

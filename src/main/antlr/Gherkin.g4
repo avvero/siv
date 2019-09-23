@@ -1,10 +1,10 @@
 grammar Gherkin;
 
-feature     : 'Feature:' phrase NEWLINE (scenario | comment)+;
-scenario    : 'Scenario:' phrase NEWLINE (step | comment)+;
-step        :  ('Given' | 'When' | 'Then' | 'And')+ ':'? phrase NEWLINE;
-comment     : '#' phrase NEWLINE;
-phrase       : (variable | WORD)+ ;
+feature     : 'Feature:' sentence NEWLINE (scenario | comment)+;
+scenario    : 'Scenario:' sentence NEWLINE (step | comment)+;
+step        :  ('Given' | 'When' | 'Then' | 'And')+ ':'? sentence NEWLINE;
+comment     : '#' sentence NEWLINE;
+sentence       : (variable | WORD)+ ;
 variable    : VARIABLE;
 
 WORD       : [a-zA-Z0-9"']+ ;
