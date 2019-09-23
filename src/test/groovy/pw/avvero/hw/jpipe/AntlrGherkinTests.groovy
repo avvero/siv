@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.ParseTreeWalker
-import pw.avvero.hw.jpipe.antlr.FeatureParser
 import pw.avvero.hw.jpipe.antlr.GherkinLexer
 import pw.avvero.hw.jpipe.antlr.GherkinParser
 import spock.lang.Specification
