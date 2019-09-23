@@ -1,5 +1,8 @@
 plugins {
     id 'java'
+    id 'groovy'
+    id 'antlr'
+    id 'idea'
     id "com.palantir.graal" version "0.6.0"
 }
 
@@ -13,8 +16,12 @@ repositories {
 }
 
 dependencies {
+    antlr "org.antlr:antlr4:4.7.1"
+    implementation 'org.antlr:antlr4-runtime:4.7.1'
 //    implementation 'info.picocli:picocli:4.0.4'
 //    annotationProcessor 'info.picocli:picocli-codegen:4.0.4'
+    testImplementation "org.codehaus.groovy:groovy-all:2.4.6"
+    testImplementation "org.spockframework:spock-core:1.1-groovy-2.4-rc-2"
 }
 
 compileJava {
@@ -30,3 +37,27 @@ jar {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ['-package', 'pw.avvero.hw.jpipe.antlr']
+    outputDirectory = new File("${project.buildDir}/generated-src/antlr/main/pw/avvero/hw/jpipe/antlr".toString())
+}
+//compileJava.dependsOn generateGrammarSource
+//sourceSets {
+//    generated {
+//        java.srcDir 'generated-src/antlr/main/'
+//    }
+//}
+//compileJava.source sourceSets.generated.java, sourceSets.main.java
+//clean {
+//    delete "generated-src"
+//}
+idea {
+    module {
+        sourceDirs += file("${project.buildDir}/generated-src/antlr/main")
+    }
+}
+
+graal.outputName("jpipe")
+graal.mainClass("pw.avvero.hw.jpipe.App")
