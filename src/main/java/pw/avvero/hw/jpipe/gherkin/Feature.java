@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Feature {
 
-    private String label;
+    private Sentence sentence;
     private List<Scenario> scenarios = new ArrayList<>();
 
-    public String getLabel() {
-        return label;
+    public Sentence getSentence() {
+        return sentence;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSentence(Sentence sentence) {
+        this.sentence = sentence;
     }
 
     public List<Scenario> getScenarios() {

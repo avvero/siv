@@ -2,13 +2,13 @@ package pw.avvero.hw.jpipe.gherkin;
 
 public class Step {
 
-    private String label;
+    private Sentence sentence;
 
-    public String getLabel() {
-        return label;
+    public Sentence getSentence() {
+        return sentence;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSentence(Sentence sentence) {
+        this.sentence = sentence;
     }
 }

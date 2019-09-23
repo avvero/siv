@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Scenario {
 
-    private String label;
+    private Sentence sentence;
     private List<Step> steps = new ArrayList<>();
 
-    public String getLabel() {
-        return label;
+    public Sentence getSentence() {
+        return sentence;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSentence(Sentence sentence) {
+        this.sentence = sentence;
     }
 
     public List<Step> getSteps() {

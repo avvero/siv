@@ -5,10 +5,11 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import pw.avvero.hw.jpipe.gherkin.Feature;
 import pw.avvero.hw.jpipe.gherkin.Scenario;
+import pw.avvero.hw.jpipe.gherkin.Sentence;
 import pw.avvero.hw.jpipe.gherkin.Step;
 
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FeatureParser extends GherkinBaseListener {
@@ -24,8 +25,8 @@ public class FeatureParser extends GherkinBaseListener {
         Feature feature = new Feature();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
-            if (child instanceof GherkinParser.FrazeContext) {
-                feature.setLabel(parse((GherkinParser.FrazeContext) child));
+            if (child instanceof GherkinParser.PhraseContext) {
+                feature.setSentence(parse((GherkinParser.PhraseContext) child));
             } else if (child instanceof GherkinParser.ScenarioContext) {
                 Scenario scenario = parse((GherkinParser.ScenarioContext) child);
                 feature.getScenarios().add(scenario);
@@ -38,8 +39,8 @@ public class FeatureParser extends GherkinBaseListener {
         Scenario scenario = new Scenario();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
-            if (child instanceof GherkinParser.FrazeContext) {
-                scenario.setLabel(parse((GherkinParser.FrazeContext) child));
+            if (child instanceof GherkinParser.PhraseContext) {
+                scenario.setSentence(parse((GherkinParser.PhraseContext) child));
             } else if (child instanceof GherkinParser.StepContext) {
                 Step step = parse((GherkinParser.StepContext) child);
                 scenario.getSteps().add(step);
@@ -52,17 +53,39 @@ public class FeatureParser extends GherkinBaseListener {
         Step step = new Step();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
-            if (child instanceof GherkinParser.FrazeContext) {
-                step.setLabel(parse((GherkinParser.FrazeContext) child));
+            if (child instanceof GherkinParser.PhraseContext) {
+                step.setSentence(parse((GherkinParser.PhraseContext) child));
             }
         }
         return step;
     }
 
-    private static String parse(GherkinParser.FrazeContext frazeContext) {
-        return frazeContext.children.stream()
-                .map(Objects::toString)
+    private static Sentence parse(GherkinParser.PhraseContext PhraseContext) {
+        Sentence sentence = new Sentence();
+        List<ParseTree> originalPhraseParts = new ArrayList<>();
+        for (ParseTree tree : PhraseContext.children) {
+            originalPhraseParts.add(tree);
+            if (tree instanceof GherkinParser.VariableContext) {
+                if (sentence.getVariables() == null) {
+                    sentence.setVariables(new ArrayList<>());
+                }
+                sentence.getVariables().add(tree.getText());
+            }
+        }
+
+        String original = originalPhraseParts.stream()
+                .map(FeatureParser::stringify)
                 .collect(Collectors.joining(" "));
+        sentence.setOriginal(original);
+        return sentence;
+    }
+
+    private static String stringify(ParseTree tree) {
+        return tree.getText();
+    }
+
+    private static String stringify(GherkinParser.VariableContext tree) {
+        return tree.getText();
     }
 
 }
