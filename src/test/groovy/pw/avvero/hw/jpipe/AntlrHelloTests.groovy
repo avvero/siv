@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.ParseTreeWalker
-import pw.avvero.hw.jpipe.antlr.HelloBaseListener
 import pw.avvero.hw.jpipe.antlr.HelloLexer
 import pw.avvero.hw.jpipe.antlr.HelloParser
 import pw.avvero.hw.jpipe.antlr.HelloWalker
