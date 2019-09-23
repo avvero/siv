@@ -1,7 +1,7 @@
-Feature: feature1
+Feature: first feature
   # comment
-  Scenario: scenario1
-    When: when1
+  Scenario: first scenario
+    When: first when
     # comment
     Then: then1
   # comment

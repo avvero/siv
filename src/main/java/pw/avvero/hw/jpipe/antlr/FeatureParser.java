@@ -7,6 +7,10 @@ import pw.avvero.hw.jpipe.gherkin.Feature;
 import pw.avvero.hw.jpipe.gherkin.Scenario;
 import pw.avvero.hw.jpipe.gherkin.Step;
 
+import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 public class FeatureParser extends GherkinBaseListener {
 
     public static Feature parse(String file) throws Exception {
@@ -56,7 +60,9 @@ public class FeatureParser extends GherkinBaseListener {
     }
 
     private static String parse(GherkinParser.FrazeContext frazeContext) {
-        return frazeContext.getText();
+        return frazeContext.children.stream()
+                .map(Objects::toString)
+                .collect(Collectors.joining(" "));
     }
 
 }
