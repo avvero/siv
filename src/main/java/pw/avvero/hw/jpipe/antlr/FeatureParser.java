@@ -10,11 +10,16 @@ import pw.avvero.hw.jpipe.gherkin.Step;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FeatureParser extends GherkinBaseListener {
 
-    public static Feature parse(String file) throws Exception {
+    /**
+     * Parsers feature from file
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public Feature parse(String file) throws Exception {
         GherkinLexer lexer = new GherkinLexer(CharStreams.fromFileName(file));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         GherkinParser parser = new GherkinParser(tokens);
@@ -35,7 +40,13 @@ public class FeatureParser extends GherkinBaseListener {
         return feature;
     }
 
-    private static Scenario parse(GherkinParser.ScenarioContext tree) {
+    /**
+     * Parses Scenario
+     *
+     * @param tree
+     * @return
+     */
+    private Scenario parse(GherkinParser.ScenarioContext tree) {
         Scenario scenario = new Scenario();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
@@ -49,10 +60,15 @@ public class FeatureParser extends GherkinBaseListener {
         return scenario;
     }
 
-    private static Step parse(GherkinParser.StepContext tree) {
+    /**
+     * Parses Step
+     *
+     * @param tree
+     * @return
+     */
+    private Step parse(GherkinParser.StepContext tree) {
         Step step = new Step();
-        for (int i = 0; i < tree.getChildCount(); i ++) {
-            ParseTree child = tree.getChild(i);
+        for (ParseTree child : tree.children) {
             if (child instanceof GherkinParser.PhraseContext) {
                 step.setSentence(parse((GherkinParser.PhraseContext) child));
             }
@@ -60,32 +76,34 @@ public class FeatureParser extends GherkinBaseListener {
         return step;
     }
 
-    private static Sentence parse(GherkinParser.PhraseContext PhraseContext) {
+    /**
+     * Parsers phrase
+     *
+     * @param phraseContext
+     * @return
+     */
+    private Sentence parse(GherkinParser.PhraseContext phraseContext) {
         Sentence sentence = new Sentence();
-        List<ParseTree> originalPhraseParts = new ArrayList<>();
-        for (ParseTree tree : PhraseContext.children) {
-            originalPhraseParts.add(tree);
-            if (tree instanceof GherkinParser.VariableContext) {
+        List<String> originalPhraseParts = new ArrayList<>();
+        List<String> templatePhraseParts = new ArrayList<>();
+        for (ParseTree child : phraseContext.children) {
+            originalPhraseParts.add(child.getText());
+            if (child instanceof GherkinParser.VariableContext) {
+                templatePhraseParts.add("\\w+");
+
                 if (sentence.getVariables() == null) {
                     sentence.setVariables(new ArrayList<>());
                 }
-                sentence.getVariables().add(tree.getText());
+                sentence.getVariables().add(child.getText());
+            } else {
+                templatePhraseParts.add(child.getText());
             }
         }
 
-        String original = originalPhraseParts.stream()
-                .map(FeatureParser::stringify)
-                .collect(Collectors.joining(" "));
-        sentence.setOriginal(original);
+        sentence.setOriginal(String.join(" ", originalPhraseParts));
+        if (sentence.getVariables() != null && sentence.getVariables().size() > 0) {
+            sentence.setTemplate(String.join(" ", templatePhraseParts));
+        }
         return sentence;
     }
-
-    private static String stringify(ParseTree tree) {
-        return tree.getText();
-    }
-
-    private static String stringify(GherkinParser.VariableContext tree) {
-        return tree.getText();
-    }
-
 }

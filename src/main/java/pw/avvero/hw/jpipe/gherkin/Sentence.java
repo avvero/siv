@@ -5,6 +5,7 @@ import java.util.List;
 public class Sentence {
 
     private String original;
+    private String template;
     private List<String> variables;
 
     public String getOriginal() {
@@ -13,6 +14,14 @@ public class Sentence {
 
     public void setOriginal(String original) {
         this.original = original;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 
     public List<String> getVariables() {

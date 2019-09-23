@@ -8,6 +8,6 @@ phrase       : (variable | WORD)+ ;
 variable    : VARIABLE;
 
 WORD       : [a-zA-Z0-9"']+ ;
-VARIABLE   : '$'[a-zA-Z0-9]+ ;
+VARIABLE   : '<'[a-zA-Z0-9]+'>' ;
 NEWLINE    : ('\n' | '\r' | '\n\r' | '\r\n')+ ;
 WHITESPACE : (' ' | '\t')+ -> skip;

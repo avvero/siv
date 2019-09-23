@@ -24,7 +24,7 @@ class AntlrGherkinTests extends Specification {
 
     def "Simple feature is parsed from file"() {
         when:
-        def feature = FeatureParser.parse("src/test/resources/example_2.feature")
+        def feature = new FeatureParser().parse("src/test/resources/example_2.feature")
         then:
         feature.sentence.original == "first feature"
         feature.scenarios[0].sentence.original == "first scenario"
@@ -37,7 +37,7 @@ class AntlrGherkinTests extends Specification {
 
     def "Complicated feature is parsed from file"() {
         when:
-        def feature = FeatureParser.parse("src/test/resources/example_1.feature")
+        def feature = new FeatureParser().parse("src/test/resources/example_1.feature")
         then:
         feature.sentence.original == "Guess the word"
         feature.scenarios[0].sentence.original == "Maker starts a game"
@@ -49,13 +49,18 @@ class AntlrGherkinTests extends Specification {
         feature.scenarios[1].steps[2].sentence.original == "the Breaker must guess a word with 5 characters"
     }
 
-    def "Feature with variabled is parsed from file"() {
+    def "Feature with variables is parsed from file"() {
         when:
-        def feature = FeatureParser.parse("src/test/resources/example_3.feature")
+        def feature = new FeatureParser().parse("src/test/resources/example_3.feature")
         then:
         feature.sentence.original == "Client registration"
         feature.scenarios[0].sentence.original == "Client is registered with account"
-        feature.scenarios[0].steps[0].sentence.original == "client with id \$clientId"
+        feature.scenarios[0].steps[0].sentence.original == "client with id <clientId>"
+        feature.scenarios[0].steps[0].sentence.template == "client with id \\w+"
+        feature.scenarios[0].steps[0].sentence.variables == ["<clientId>"]
+        feature.scenarios[0].steps[1].sentence.original == "account <accountId> is created for client <clientId>"
+        feature.scenarios[0].steps[1].sentence.template == "account \\w+ is created for client \\w+"
+        feature.scenarios[0].steps[1].sentence.variables == ["<accountId>", "<clientId>"]
     }
 
 }
