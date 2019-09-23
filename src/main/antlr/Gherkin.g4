@@ -1,8 +1,7 @@
 grammar Gherkin;
 
-file        : (feature | scenario)+ EOF;
-feature     : 'Feature:' fraze NEWLINE scenario+;
-scenario    : 'Scenario:' fraze NEWLINE step+;
+feature     : 'Feature:' fraze NEWLINE (scenario | comment)+;
+scenario    : 'Scenario:' fraze NEWLINE (step | comment)+;
 step        :  ('When:' | 'Then:' | 'And:')+ fraze NEWLINE;
 comment     : '#' fraze NEWLINE;
 fraze       : WORD+ ;

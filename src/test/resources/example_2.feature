@@ -1,7 +1,10 @@
 Feature: feature1
+  # comment
   Scenario: scenario1
     When: when1
+    # comment
     Then: then1
+  # comment
   Scenario: scenario2
     When: when2
     Then: then2

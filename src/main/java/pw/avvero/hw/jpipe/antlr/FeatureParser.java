@@ -7,8 +7,6 @@ import pw.avvero.hw.jpipe.gherkin.Feature;
 import pw.avvero.hw.jpipe.gherkin.Scenario;
 import pw.avvero.hw.jpipe.gherkin.Step;
 
-import java.util.ArrayList;
-
 public class FeatureParser extends GherkinBaseListener {
 
     public static Feature parse(String file) throws Exception {

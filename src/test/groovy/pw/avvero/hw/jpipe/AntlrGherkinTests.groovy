@@ -22,7 +22,7 @@ class AntlrGherkinTests extends Specification {
 
     }
 
-    def "Test"() {
+    def "Features is parsed from file"() {
         when:
         def feature = FeatureParser.parse("src/test/resources/example_2.feature")
         then:
@@ -30,6 +30,9 @@ class AntlrGherkinTests extends Specification {
         feature.scenarios[0].label == "scenario1"
         feature.scenarios[0].steps[0].label == "when1"
         feature.scenarios[0].steps[1].label == "then1"
+        feature.scenarios[1].label == "scenario2"
+        feature.scenarios[1].steps[0].label == "when2"
+        feature.scenarios[1].steps[1].label == "then2"
     }
 
 }
