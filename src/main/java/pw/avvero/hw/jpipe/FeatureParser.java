@@ -83,8 +83,14 @@ public class FeatureParser extends GherkinBaseListener {
         return step;
     }
 
-    private Step update(Step step, ParserRuleContext givenContext) {
-        for (ParseTree child : givenContext.children) {
+    /**
+     * Updates step with context
+     * @param step
+     * @param context
+     * @return
+     */
+    private Step update(Step step, ParserRuleContext context) {
+        for (ParseTree child : context.children) {
             if (child instanceof GherkinParser.SentenceContext) {
                 step.setSentence(parse((GherkinParser.SentenceContext) child));
             }
