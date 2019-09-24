@@ -10,7 +10,7 @@ public class FeatureWriter {
     private static final String NEW_LINE = "\n";
 
     /**
-     * Write feature to string
+     * Writes feature to string
      * @param feature
      * @return
      */

@@ -1,11 +1,12 @@
 package pw.avvero.hw.jpipe.gherkin;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Sentence {
 
     private String original;
-    private String template;
+    private Pattern pattern;
     private List<String> variables;
 
     public String getOriginal() {
@@ -16,12 +17,12 @@ public class Sentence {
         this.original = original;
     }
 
-    public String getTemplate() {
-        return template;
+    public Pattern getPattern() {
+        return pattern;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public void setPattern(Pattern pattern) {
+        this.pattern = pattern;
     }
 
     public List<String> getVariables() {

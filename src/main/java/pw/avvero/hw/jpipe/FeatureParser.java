@@ -1,5 +1,6 @@
 package pw.avvero.hw.jpipe;
 
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -11,22 +12,43 @@ import pw.avvero.hw.jpipe.gherkin.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FeatureParser extends GherkinBaseListener {
 
     /**
-     * Parsers feature from file
-     * @param file
+     * Parsers feature from string
+     * @param string
      * @return
      * @throws Exception
      */
-    public Feature parse(String file) throws Exception {
-        GherkinLexer lexer = new GherkinLexer(CharStreams.fromFileName(file));
+    public Feature parseFromString(String string) throws Exception {
+        return parseFromCharStream(CharStreams.fromString(string));
+    }
+
+    /**
+     * Parsers feature from file
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public Feature parseFromFile(String filePath) throws Exception {
+        return parseFromCharStream(CharStreams.fromFileName(filePath));
+    }
+
+    /**
+     * Parses feature from CharStream
+     * @param charStream
+     * @return
+     * @throws Exception
+     */
+    public Feature parseFromCharStream(CharStream charStream) throws Exception {
+        GherkinLexer lexer = new GherkinLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         GherkinParser parser = new GherkinParser(tokens);
         ParseTree tree = parser.feature();
         if (tree.getChildCount() == 0) {
-            throw new Exception("Can't parse feature from file " + file);
+            throw new Exception("Can't parse feature");
         }
         Feature feature = new Feature();
         for (int i = 0; i < tree.getChildCount(); i ++) {
@@ -36,6 +58,15 @@ public class FeatureParser extends GherkinBaseListener {
             } else if (child instanceof GherkinParser.ScenarioContext) {
                 Scenario scenario = parse((GherkinParser.ScenarioContext) child);
                 feature.getScenarios().add(scenario);
+            }
+        }
+        if (feature.getScenarios().size() == 0) {
+            throw new Exception("Feature parsing is unsuccessful, scenarios are not recognized");
+        }
+        for (Scenario scenario : feature.getScenarios()) {
+            if (scenario.getSteps().size() == 0) {
+                throw new Exception(String.format("Feature parsing is unsuccessful, steps are not recognized for scenario '%s'",
+                        scenario.getSentence().getOriginal()));
             }
         }
         return feature;
@@ -124,7 +155,9 @@ public class FeatureParser extends GherkinBaseListener {
 
         sentence.setOriginal(String.join(" ", originalPhraseParts));
         if (sentence.getVariables() != null && sentence.getVariables().size() > 0) {
-            sentence.setTemplate(String.join(" ", templatePhraseParts));
+            sentence.setPattern(Pattern.compile(String.join(" ", templatePhraseParts)));
+        } else {
+            sentence.setPattern(Pattern.compile(sentence.getOriginal()));
         }
         return sentence;
     }

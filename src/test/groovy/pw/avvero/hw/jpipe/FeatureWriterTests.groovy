@@ -7,7 +7,7 @@ class FeatureWriterTests extends Specification {
     def "FeatureWriter prints to string"() {
         when:
         def writer = new FeatureWriter()
-        def feature = new FeatureParser().parse("src/test/resources/example_1.feature")
+        def feature = new FeatureParser().parseFromFile("src/test/resources/feature/example_1.feature")
         then:
         writer.toString(feature) == """Feature: Guess the word
   Scenario: Maker starts a game
