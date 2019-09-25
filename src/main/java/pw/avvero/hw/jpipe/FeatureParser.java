@@ -5,7 +5,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
-import pw.avvero.hw.jpipe.antlr.GherkinBaseListener;
 import pw.avvero.hw.jpipe.antlr.GherkinLexer;
 import pw.avvero.hw.jpipe.antlr.GherkinParser;
 import pw.avvero.hw.jpipe.gherkin.*;
@@ -14,7 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class FeatureParser extends GherkinBaseListener {
+/**
+ * Parses features with help of antlr
+ */
+public class FeatureParser {
 
     /**
      * Parsers feature from string

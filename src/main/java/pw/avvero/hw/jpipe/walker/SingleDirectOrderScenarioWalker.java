@@ -23,6 +23,7 @@ public class SingleDirectOrderScenarioWalker {
     }
 
     public void pass(String s) {
+        if (s == null || "".equals(s.trim())) return;
         for (ScenarioTracker scenarioTracker : scenarioTrackers) {
             boolean hit = scenarioTracker.hit(s, this::onScenarioTrackerStart, this::onScenarioTrackerFinish);
             if (hit) return;

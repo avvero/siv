@@ -1,5 +1,6 @@
 package pw.avvero.hw.jpipe.gherkin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -7,7 +8,7 @@ public class Sentence {
 
     private String original;
     private Pattern pattern;
-    private List<String> variables;
+    private List<String> variables = new ArrayList<>();
 
     public String getOriginal() {
         return original;
