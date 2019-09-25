@@ -21,12 +21,12 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         featureString = """
             Feature: Client registration
               Scenario: Client is registered with account
-                When: client with id <clientId> is registered
-                Then: account <accountId> is created for client <clientId>
+                When: client with id is registered
+                Then: account is created for client
         """
         log = """
-        2019-09-24 INFO client with id 1000 is registered
-        2019-09-24 INFO account 40 is created for client 1000
+        2019-09-24 INFO client with id is registered
+        2019-09-24 INFO account is created for client
         """
     }
 
@@ -43,11 +43,11 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         featureString = """
             Feature: Client registration
               Scenario: Client is registered with account
-                When: client with id <clientId> is registered
-                Then: account <accountId> is created for client <clientId>
+                When: client with id is registered
+                Then: account is created for client
         """
         log = """
-        2019-09-24 INFO client with id 1000 is registered
+        2019-09-24 INFO client with id is registered
         2019-09-24 INFO foo
         """
     }
@@ -65,14 +65,14 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         featureString = """
             Feature: Client registration
               Scenario: Client is registered with account
-                When: client with id <clientId> is registered
-                Then: account <accountId> is created for client <clientId>
+                When: client with id is registered
+                Then: account is created for client
         """
         log = """
-        2019-09-24 INFO client with id 1000 is registered
-        2019-09-24 INFO account 40 is created for client 1000
-        2019-09-24 INFO client with id 1001 is registered
-        2019-09-24 INFO account 41 is created for client 1001
+        2019-09-24 INFO client with id is registered
+        2019-09-24 INFO account is created for client
+        2019-09-24 INFO client with id is registered
+        2019-09-24 INFO account is created for client
         """
     }
 
