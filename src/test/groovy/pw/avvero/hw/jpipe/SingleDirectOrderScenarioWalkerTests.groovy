@@ -11,12 +11,12 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
     def "Feature hits successfully with single case"() {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
-        def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def completedBucket = new FinishedTrackersBucket()
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), completedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.finished == [true]
-        finishedBucket.list.stepsHits == [[1, 1] as int[]]
+        completedBucket.list.completed == [true]
+        completedBucket.list.stepsHits == [[1, 1] as int[]]
         where:
         featureString = """
             Feature: Client registration
@@ -37,7 +37,7 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        walker.scenarioTrackers.finished == [false, false]
+        walker.scenarioTrackers.completed == [false, false]
         walker.scenarioTrackers.stepsHits == [[1, 0] as int[], [0, 0] as int[]]
         where:
         featureString = """
@@ -59,7 +59,7 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.finished == [true, true]
+        finishedBucket.list.completed == [true, true]
         finishedBucket.list.stepsHits == [[1, 1] as int[], [1, 1] as int[]]
         where:
         featureString = """

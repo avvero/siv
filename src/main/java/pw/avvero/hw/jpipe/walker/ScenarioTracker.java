@@ -10,7 +10,7 @@ public class ScenarioTracker {
     private Scenario scenario;
     private int currentStepIndex = 0;
     private int[] stepsHits;
-    private boolean finished;
+    private boolean completed;
 
     public ScenarioTracker(Scenario scenario) {
         this.scenario = scenario;
@@ -26,7 +26,7 @@ public class ScenarioTracker {
                 onStart.accept(this);
             }
             if (currentStepIndex == scenario.getSteps().size() - 1) {
-                finished = true;
+                completed = true;
                 onFinish.accept(this);
             }
             currentStepIndex++;
@@ -38,7 +38,7 @@ public class ScenarioTracker {
         return stepsHits;
     }
 
-    public boolean isFinished() {
-        return finished;
+    public boolean isCompleted() {
+        return completed;
     }
 }
