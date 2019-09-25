@@ -1,18 +1,18 @@
 package pw.avvero.hw.jpipe
 
 import pw.avvero.hw.jpipe.walker.ScenarioTracker
-import pw.avvero.hw.jpipe.walker.SingleScenarioWalker
+import pw.avvero.hw.jpipe.walker.SingleDirectOrderScenarioWalker
 import spock.lang.Specification
 
 import java.util.function.Consumer
 
-class SingleScenarioWalkerTests extends Specification {
+class SingleDirectOrderScenarioWalkerTests extends Specification {
 
     def "Feature hits successfully with single case"() {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
         def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
         finishedBucket.list.finished == [true]
@@ -34,7 +34,7 @@ class SingleScenarioWalkerTests extends Specification {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
         def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
         walker.scenarioTrackers.finished == [false, false]
@@ -56,7 +56,7 @@ class SingleScenarioWalkerTests extends Specification {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
         def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
         finishedBucket.list.finished == [true, true]

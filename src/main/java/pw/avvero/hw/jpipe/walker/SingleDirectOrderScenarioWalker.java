@@ -6,13 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SingleScenarioWalker {
+public class SingleDirectOrderScenarioWalker {
 
     private Scenario scenario;
     private List<ScenarioTracker> scenarioTrackers = new LinkedList<>();
     private Consumer<ScenarioTracker> onTrackerFinish;
 
-    public SingleScenarioWalker(Scenario scenario, Consumer<ScenarioTracker> onTrackerFinish) {
+    public SingleDirectOrderScenarioWalker(Scenario scenario, Consumer<ScenarioTracker> onTrackerFinish) {
         this.scenario = scenario;
         this.onTrackerFinish = onTrackerFinish;
         trackNewScenario();
