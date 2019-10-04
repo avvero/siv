@@ -1,6 +1,9 @@
 package pw.avvero.hw.jpipe.gherkin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -8,10 +11,10 @@ import static java.lang.String.format;
 
 public class Sentence {
 
-    private List<SentenceChunk> chunks = new ArrayList<>();
-    private List<String> ESCAPABLE = Arrays.asList("(", ")");
     private static final String VARIABLE_T = "<%s>";
     private static final String VARIABLE_P = "(?<%s>[\\w-]+)";
+
+    private List<SentenceChunk> chunks = new ArrayList<>();
 
     public String getOriginal() {
         String value = chunks.stream()
@@ -46,11 +49,7 @@ public class Sentence {
                         String value = context.get(it.value);
                         return value != null ? value : format(VARIABLE_P, it.value);
                     } else if (it instanceof Sign) {
-                        if (ESCAPABLE.contains(it.value)) {
-                            return "\\" + it.value;
-                        } else {
-                            return it.value;
-                        }
+                        return "\\" + it.value;
                     } else {
                         return it.value;
                     }

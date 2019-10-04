@@ -33,6 +33,27 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         """
     }
 
+    def "One step Scenario is completed successfully with single case without context"() {
+        when:
+        def feature = new FeatureParser().parseFromString(featureString)
+        def finishedBucket = new FinishedTrackersBucket()
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
+        log.split("\n").each { l -> walker.pass(l)}
+        then:
+        finishedBucket.list.completed == [true]
+        finishedBucket.list.stepsHits == [[1] as int[]]
+        where:
+        featureString = """
+            Feature: Client registration
+              Scenario: Client is registered with account
+                When: client with id is registered
+        """
+        log = """
+        2019-09-24 INFO client with id is registered
+        """
+    }
+
     def "Scenario is not completed successfully with single case without context"() {
         when:
         def feature = new FeatureParser().parseFromString(featureString)

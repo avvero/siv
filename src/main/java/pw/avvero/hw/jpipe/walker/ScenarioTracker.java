@@ -40,7 +40,8 @@ public class ScenarioTracker {
             onHit.accept(this, matchResult);
             if (hitIndex == 0) {
                 onStart.accept(this);
-            } else if (hitIndex == scenario.getSteps().size() - 1) {
+            }
+            if (hitIndex == scenario.getSteps().size() - 1) {
                 completed = true;
                 onFinish.accept(this);
             }

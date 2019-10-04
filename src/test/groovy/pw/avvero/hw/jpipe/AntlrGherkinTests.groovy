@@ -67,7 +67,7 @@ class AntlrGherkinTests extends Specification {
         f.scenarios[0].steps[1].sentence.variables == [new Variable("accountId"), new Variable("clientId")]
     }
 
-    def "Feature with complecated sentence"() {
+    def "Feature with complicated sentence"() {
         when:
         def f = new FeatureParser().parseFromString(featureString)
         then:
@@ -79,6 +79,19 @@ class AntlrGherkinTests extends Specification {
   Scenario: DB call
     When: (,91508063b)  qtp2092956823-487  params (repository.add)
         """
+    }
+
+    def "Feature with very complicated sentence"() {
+        when:
+        def f = new FeatureParser().parseFromString(featureString)
+        then:
+        f.sentence.original == "DB call"
+        f.scenarios[0].sentence.original == "DB call"
+        f.scenarios[0].steps[0].sentence.original == "(,9766fe0fcd059,) qtp1709629705-418 jpa:log:1164 - ******* InParams (repository.user_add) *******"
+        where:
+        featureString = """Feature: DB call
+  Scenario: DB call
+    When: (,9766fe0fcd059,) qtp1709629705-418 jpa:log:1164 - ******* InParams (repository.user_add) *******"""
     }
 
     def "Parses rises exception if feature has no scenarios"() {

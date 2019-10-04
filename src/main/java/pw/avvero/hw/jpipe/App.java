@@ -1,5 +1,6 @@
 package pw.avvero.hw.jpipe;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import pw.avvero.hw.jpipe.gherkin.Feature;
 import pw.avvero.hw.jpipe.walker.SingleDirectOrderScenarioWalker;
 
@@ -49,7 +50,7 @@ public class App {
                 }
             }
         } catch (Exception e) {
-            System.err.println(e);
+            System.err.println(ExceptionUtils.getStackTrace(e));
         }
         console.common("\n");
     }
