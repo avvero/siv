@@ -50,6 +50,8 @@ public class Sentence {
                         return value != null ? value : format(VARIABLE_P, it.value);
                     } else if (it instanceof Sign) {
                         return "\\" + it.value;
+                    } else if (it instanceof Space) {
+                        return "\\s+";
                     } else {
                         return it.value;
                     }

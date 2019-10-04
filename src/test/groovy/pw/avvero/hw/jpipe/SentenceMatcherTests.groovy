@@ -18,20 +18,27 @@ class SentenceMatcherTests extends Specification {
         def matcher = new SentenceMatcher()
         def sentence = getSentence(pattern)
         then:
-        matcher.match(sentence, string).matches
+        matcher.match(sentence, string).matches == matches
         where:
-        pattern                                  | string
-        "foo <v>"                                | "foo bar"
-        "foo <v> foo"                            | "foo bar foo"
-        "foo"                                    | "foo"
-        "foo"                                    | "foo"
-        "a.b:c{d}(n) <id>"                       | "a.b:c{d}(n) 12"
-        "a.b:c{d}(n)?\\s#^!~%^&*( <id>"          | "a.b:c{d}(n)?\\s#^!~%^&*( 11"
-        "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q <id>" | "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q 12"
-        "a:b <id>"                               | "a:b 12"
-        "a#b <id>"                               | "a#b 12"
-        "a.bc{d}(n)?s#^!~%^&*( <id>"             | "a.bc{d}(n)?s#^!~%^&*( 10"
-        "a.bc{d}(n)?s#^!~%^&*( <id>"             | "a.bc{d}(n)?s#^!~%^&*( 10"
+        pattern                                  | string                                 | matches
+//        "foo <v>"                                | "foo bar"                              | true
+        "foo <v>"                                | "foo  bar"                             | true
+        "foo <v>"                                | "foo   bar"                            | true
+        "foo <v> foo"                            | "foo bar foo"                          | true
+        "foo <v> foo"                            | "foo  bar  foo"                        | true
+        "foo <v> foo"                            | "foobarfoo"                            | false
+        "foo <v> foo"                            | "foo bar foo"                          | true
+        "foo <v> foo"                            | "foo bar foo too moo"                  | true
+        "foo \\w+ <v> \\w+ foo"                  | "foo ANY bar ANY foo"                  | false
+        "foo"                                    | "foo"                                  | true
+        "foo"                                    | "foo"                                  | true
+        "a.b:c{d}(n) <id>"                       | "a.b:c{d}(n) 12"                       | true
+        "a.b:c{d}(n)?\\s#^!~%^&*( <id>"          | "a.b:c{d}(n)?\\s#^!~%^&*( 11"          | true
+        "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q <id>" | "a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q 12" | true
+        "a:b <id>"                               | "a:b 12"                               | true
+        "a#b <id>"                               | "a#b 12"                               | true
+        "a.bc{d}(n)?s#^!~%^&*( <id>"             | "a.bc{d}(n)?s#^!~%^&*( 10"             | true
+        "a.bc{d}(n)?s#^!~%^&*( <id>"             | "a.bc{d}(n)?s#^!~%^&*( 10"             | true
     }
 
     @Unroll

@@ -151,6 +151,8 @@ public class FeatureParser {
                 }
             } else if (child instanceof GherkinParser.SignContext) {
                 sentence.getChunks().add(new Sign(child.getText()));
+            } else if (child instanceof GherkinParser.SpaceContext) {
+                sentence.getChunks().add(new Space(child.getText()));
             } else {
                 sentence.getChunks().add(new Word(child.getText()));
             }

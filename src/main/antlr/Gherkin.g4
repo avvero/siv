@@ -17,6 +17,6 @@ space       : SPACE;
 leadSpace   : SPACE;
 
 WORD       : [a-zA-Z0-9'-]+ ;
-SIGN       : [.,:-;(){}_*#^!~%&"?\\] ;
+SIGN       : [.,:-;(){}_*#^!~%&"?\\+] ;
 SPACE      : (' ' | '\t')+ ;
 NEWLINE    : ('\n' | '\r' | '\n\r' | '\r\n')+ ;
