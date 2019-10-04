@@ -7,30 +7,34 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class App {
+    
+    private static ConsoleWriter console = new ConsoleWriter();
 
     public static void main(String... args) throws Exception {
-        System.out.println("----- jpipe started with args: " + String.join(", ", args));
+        console.common("App is started with args: " + String.join(", ", args));
         if (args.length == 0) {
             throw new Exception("Please specify feature file");
         }
         String featureFile = args[0];
-        System.out.println("----- feature file is: " + featureFile);
+        console.common("Feature file is: " + featureFile);
+        console.common("");
         Feature feature = new FeatureParser().parseFromFile(featureFile);
-
         FeatureWriter featureWriter = new FeatureWriter();
-
-        System.out.println("----- feature is: \n" + featureWriter.toString(feature));
-        System.out.println("------------------------------------------------------------------------------");
+        console.blueBold("------------------------------------------------------------------------------");
+        console.blue(featureWriter.toString(feature));
+        console.blueBold("------------------------------------------------------------------------------");
         SingleDirectOrderScenarioWalker walker = new SingleDirectOrderScenarioWalker(feature.getScenarios().get(0),
                 t -> {
-                    System.out.println("Scenario is started: " + t.getScenario().getSentence().getOriginal());
+//                    console.common("New scenario is started: " + t.getScenario().getSentence().getOriginal());
                 },
                 (t, s) -> {
-                    System.out.println(String.format("Hit sentence: \n    >%s\n    >%s",
-                            s.getSentence().getOriginal(), s.getString()));
+//                    console.common(String.format("Hit sentence: \n    >%s\n    >%s",
+//                            s.getSentence().getOriginal(), s.getString()));
                 },
                 t -> {
-                    System.out.println("Scenario is finished: \n" + featureWriter.toString(feature, t.getContext()));
+                    console.greenBold("\nFINISHED:");
+                    console.green(featureWriter.toString(t.getScenario(), t.getContext()));
+//                    console.greenBold("\n");
                 });
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -38,7 +42,7 @@ public class App {
             while (true) {
                 if ((line = reader.readLine()) != null) {
                     walker.pass(line);
-//                    System.out.println("echo>> " + line);
+//                    console.common("echo>> " + line);
                 } else {
                     //input finishes
                     break;
@@ -47,6 +51,7 @@ public class App {
         } catch (Exception e) {
             System.err.println(e);
         }
+        console.common("\n");
     }
 
 }

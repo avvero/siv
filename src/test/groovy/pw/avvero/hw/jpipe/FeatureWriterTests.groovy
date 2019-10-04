@@ -16,8 +16,7 @@ class FeatureWriterTests extends Specification {
   Scenario: Breaker joins a game
     Given: the Maker has started a game with the word "silky"
     When: the Breaker joins the Maker's game
-    Then: the Breaker must guess a word with 5 characters
-"""
+    Then: the Breaker must guess a word with 5 characters"""
     }
 
     def "FeatureWriter prints to string with the context"() {
@@ -28,8 +27,7 @@ class FeatureWriterTests extends Specification {
         writer.toString(feature, ["clientId": "12345", "accountId": "5000"] as Map) == """Feature: Client registration
   Scenario: Client is registered with account
     When: client with id 12345
-    Then: account 5000 is created for client 12345
-"""
+    Then: account 5000 is created for client 12345"""
     }
 
 }

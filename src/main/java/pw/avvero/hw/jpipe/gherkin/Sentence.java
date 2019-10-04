@@ -1,19 +1,21 @@
 package pw.avvero.hw.jpipe.gherkin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 public class Sentence {
 
     private List<SentenceChunk> chunks = new ArrayList<>();
+    private List<String> ESCAPABLE = Arrays.asList("(", ")");
+    private static final String VARIABLE_T = "<%s>";
+    private static final String VARIABLE_P = "(?<%s>[\\w-]+)";
 
     public String getOriginal() {
         String value = chunks.stream()
-                .map(it -> it instanceof Variable ? "<" + it.value + ">" : it.value)
+                .map(it -> it instanceof Variable ? format(VARIABLE_T, it.value) : it.value)
                 .map(Objects::toString)
                 .collect(Collectors.joining());
         return value;
@@ -24,7 +26,7 @@ public class Sentence {
 
         String value = chunks.stream()
                 .map(it -> it instanceof Variable
-                        ? context.getOrDefault(it.value, "<" + it.value + ">") : it.value)
+                        ? context.getOrDefault(it.value, format(VARIABLE_T, it.value)) : it.value)
                 .map(Objects::toString)
                 .collect(Collectors.joining());
         return value;
@@ -32,7 +34,7 @@ public class Sentence {
 
     public Pattern getPattern() {
         String patternValue = chunks.stream()
-                .map(it -> it instanceof Variable ? "(?<" + it.value + ">\\w+)" : it.value)
+                .map(it -> it instanceof Variable ? format(VARIABLE_P, it.value) : it.value)
                 .collect(Collectors.joining());
         return Pattern.compile(patternValue);
     }
@@ -42,7 +44,13 @@ public class Sentence {
                 .map(it -> {
                     if (it instanceof Variable) {
                         String value = context.get(it.value);
-                        return value != null ? value : "(?<" + it.value + ">\\w+)";
+                        return value != null ? value : format(VARIABLE_P, it.value);
+                    } else if (it instanceof Sign) {
+                        if (ESCAPABLE.contains(it.value)) {
+                            return "\\" + it.value;
+                        } else {
+                            return it.value;
+                        }
                     } else {
                         return it.value;
                     }

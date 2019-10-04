@@ -60,11 +60,25 @@ class AntlrGherkinTests extends Specification {
         f.sentence.original == "Client registration"
         f.scenarios[0].sentence.original == "Client is registered with account"
         f.scenarios[0].steps[0].sentence.original == "client with id <clientId>"
-        f.scenarios[0].steps[0].sentence.pattern.toString() == "client with id (?<clientId>\\w+)"
+        f.scenarios[0].steps[0].sentence.pattern.toString() == "client with id (?<clientId>[\\w-]+)"
         f.scenarios[0].steps[0].sentence.variables == [new Variable("clientId")]
         f.scenarios[0].steps[1].sentence.original == "account <accountId> is created for client <clientId>"
-        f.scenarios[0].steps[1].sentence.pattern.toString() == "account (?<accountId>\\w+) is created for client (?<clientId>\\w+)"
+        f.scenarios[0].steps[1].sentence.pattern.toString() == "account (?<accountId>[\\w-]+) is created for client (?<clientId>[\\w-]+)"
         f.scenarios[0].steps[1].sentence.variables == [new Variable("accountId"), new Variable("clientId")]
+    }
+
+    def "Feature with complecated sentence"() {
+        when:
+        def f = new FeatureParser().parseFromString(featureString)
+        then:
+        f.sentence.original == "DB call"
+        f.scenarios[0].sentence.original == "DB call"
+        f.scenarios[0].steps[0].sentence.original == "(,91508063b)  qtp2092956823-487  params (repository.add)"
+        where:
+        featureString = """Feature: DB call
+  Scenario: DB call
+    When: (,91508063b)  qtp2092956823-487  params (repository.add)
+        """
     }
 
     def "Parses rises exception if feature has no scenarios"() {

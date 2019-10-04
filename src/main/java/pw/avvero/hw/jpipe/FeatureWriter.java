@@ -37,7 +37,22 @@ public class FeatureWriter {
                         .append(NEW_LINE);
             }
         }
-        return builder.toString();
+        return builder.toString().trim();
+    }
+
+    public String toString(Scenario scenario, Map<String, String> context) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Scenario: ")
+                .append(scenario.getSentence().getOriginal(context))
+                .append(NEW_LINE);
+        for (Step step : scenario.getSteps()) {
+            builder.append(TAB)
+                    .append(step.getClass().getSimpleName())
+                    .append(": ")
+                    .append(step.getSentence().getOriginal(context))
+                    .append(NEW_LINE);
+        }
+        return builder.toString().trim();
     }
 
     public String toString(Feature feature) {
