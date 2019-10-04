@@ -1,17 +1,20 @@
 grammar Gherkin;
 
-feature     : 'Feature:' sentence NEWLINE (scenario | comment)+;
-scenario    : 'Scenario:' sentence NEWLINE (step | comment)+;
-step        :  (given | when | then | and);
-given       : 'Given' ':'? sentence NEWLINE;
-when        : 'When' ':'? sentence NEWLINE;
-then        : 'Then' ':'? sentence NEWLINE;
-and         : 'And' ':'? sentence NEWLINE;
-comment     : '#' sentence NEWLINE;
-sentence    : (variable | WORD)+ ;
-variable    : VARIABLE;
+feature     : leadSpace? 'Feature:' leadSpace? sentence NEWLINE (scenario | comment)+;
+scenario    : leadSpace? 'Scenario:' leadSpace? sentence NEWLINE (step | comment)+;
+step        : leadSpace? (given | when | then | and);
+given       : 'Given' ':'? leadSpace? sentence NEWLINE;
+when        : 'When' ':'? leadSpace? sentence NEWLINE;
+then        : 'Then' ':'? leadSpace? sentence NEWLINE;
+and         : 'And' ':'? leadSpace? sentence NEWLINE;
+comment     : leadSpace? '#' sentence NEWLINE;
+sentence    : (variable | WORD | SIGN | space)+ ;
+variable    : '<' variableName '>';
+variableName: WORD;
+space       : SPACE;
+leadSpace   : SPACE;
 
-WORD       : [a-zA-Z0-9"']+ ;
-VARIABLE   : '<'[a-zA-Z0-9]+'>' ;
+WORD       : [a-zA-Z0-9"'-]+ ;
+SIGN       : [\\.,:-;]+ ;
+SPACE      : (' ' | '\t')+ ;
 NEWLINE    : ('\n' | '\r' | '\n\r' | '\r\n')+ ;
-WHITESPACE : (' ' | '\t')+ -> skip;

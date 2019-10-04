@@ -23,8 +23,8 @@ public class ScenarioTracker {
         if (completed) return false;
 
         Step step = scenario.getSteps().get(currentStepIndex);
-        boolean matches = SentenceMatcher.getInstance().match(step.getSentence(), s).matches;
-        if (matches) {
+        SentenceMatcher.Result matchResult = SentenceMatcher.getInstance().match(step.getSentence(), s, context);
+        if (matchResult.matches) {
             // process step
             this.stepsHits[currentStepIndex] = 1;
             if (currentStepIndex == 0) {
@@ -35,8 +35,12 @@ public class ScenarioTracker {
                 onFinish.accept(this);
             }
             currentStepIndex++;
+            // fill the context
+            if (matchResult.attributes != null && matchResult.attributes.size() > 0) {
+                matchResult.attributes.forEach((k, v) -> context.putIfAbsent(k, v));
+            }
         }
-        return matches;
+        return matchResult.matches;
     }
 
     public int[] getStepsHits() {

@@ -2,35 +2,50 @@ package pw.avvero.hw.jpipe.gherkin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Sentence {
 
-    private String original;
-    private Pattern pattern;
-    private List<String> variables = new ArrayList<>();
+    private List<SentenceChunk> chunks = new ArrayList<>();
 
     public String getOriginal() {
-        return original;
-    }
-
-    public void setOriginal(String original) {
-        this.original = original;
+        String value = chunks.stream()
+                .map(it -> it instanceof Variable ? "<" + it.value + ">" : it.value)
+                .map(Objects::toString)
+                .collect(Collectors.joining());
+        return value;
     }
 
     public Pattern getPattern() {
-        return pattern;
+        String patternValue = chunks.stream()
+                .map(it -> it instanceof Variable ? "(?<" + it.value + ">\\w+)" : it.value)
+                .collect(Collectors.joining());
+        return Pattern.compile(patternValue);
     }
 
-    public void setPattern(Pattern pattern) {
-        this.pattern = pattern;
+    public Pattern getPattern(Map<String, String> context) {
+        String patternValue = chunks.stream()
+                .map(it -> {
+                    if (it instanceof Variable) {
+                        String value = context.get(it.value);
+                        return value != null ? value : "(?<" + it.value + ">\\w+)";
+                    } else {
+                        return it.value;
+                    }
+                })
+                .collect(Collectors.joining());
+        return Pattern.compile(patternValue);
     }
 
-    public List<String> getVariables() {
-        return variables;
+    public List<SentenceChunk> getVariables() {
+        return chunks.stream().filter(it -> it instanceof Variable).collect(Collectors.toList());
     }
 
-    public void setVariables(List<String> variables) {
-        this.variables = variables;
+    public List<SentenceChunk> getChunks() {
+        return chunks;
     }
+
 }

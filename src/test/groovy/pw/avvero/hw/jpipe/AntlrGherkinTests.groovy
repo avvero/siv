@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import pw.avvero.hw.jpipe.antlr.GherkinLexer
 import pw.avvero.hw.jpipe.antlr.GherkinParser
+import pw.avvero.hw.jpipe.gherkin.Variable
 import spock.lang.Specification
 
 class AntlrGherkinTests extends Specification {
@@ -28,10 +29,14 @@ class AntlrGherkinTests extends Specification {
         feature.sentence.original == "first feature"
         feature.scenarios[0].sentence.original == "first scenario"
         feature.scenarios[0].steps[0].sentence.original == "first when"
-        feature.scenarios[0].steps[1].sentence.original == "then1"
+        feature.scenarios[0].steps[0].sentence.pattern.toString() == "first when"
+        feature.scenarios[0].steps[1].sentence.original == "then1, 2"
+        feature.scenarios[0].steps[1].sentence.pattern.toString() == "then1, 2"
         feature.scenarios[1].sentence.original == "scenario2"
         feature.scenarios[1].steps[0].sentence.original == "when2"
+        feature.scenarios[1].steps[0].sentence.pattern.toString() == "when2"
         feature.scenarios[1].steps[1].sentence.original == "then2"
+        feature.scenarios[1].steps[1].sentence.pattern.toString() == "then2"
     }
 
     def "Complicated feature is parsed from file"() {
@@ -50,16 +55,16 @@ class AntlrGherkinTests extends Specification {
 
     def "Feature with variables is parsed from file"() {
         when:
-        def feature = new FeatureParser().parseFromFile("src/test/resources/feature/example_3.feature")
+        def f = new FeatureParser().parseFromFile("src/test/resources/feature/example_3.feature")
         then:
-        feature.sentence.original == "Client registration"
-        feature.scenarios[0].sentence.original == "Client is registered with account"
-        feature.scenarios[0].steps[0].sentence.original == "client with id <clientId>"
-        feature.scenarios[0].steps[0].sentence.pattern.toString() == "client with id \\w+"
-        feature.scenarios[0].steps[0].sentence.variables == ["<clientId>"]
-        feature.scenarios[0].steps[1].sentence.original == "account <accountId> is created for client <clientId>"
-        feature.scenarios[0].steps[1].sentence.pattern.toString() == "account \\w+ is created for client \\w+"
-        feature.scenarios[0].steps[1].sentence.variables == ["<accountId>", "<clientId>"]
+        f.sentence.original == "Client registration"
+        f.scenarios[0].sentence.original == "Client is registered with account"
+        f.scenarios[0].steps[0].sentence.original == "client with id <clientId>"
+        f.scenarios[0].steps[0].sentence.pattern.toString() == "client with id (?<clientId>\\w+)"
+        f.scenarios[0].steps[0].sentence.variables == [new Variable("clientId")]
+        f.scenarios[0].steps[1].sentence.original == "account <accountId> is created for client <clientId>"
+        f.scenarios[0].steps[1].sentence.pattern.toString() == "account (?<accountId>\\w+) is created for client (?<clientId>\\w+)"
+        f.scenarios[0].steps[1].sentence.variables == [new Variable("accountId"), new Variable("clientId")]
     }
 
     def "Parses rises exception if feature has no scenarios"() {

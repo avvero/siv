@@ -55,7 +55,9 @@ public class FeatureParser {
         Feature feature = new Feature();
         for (int i = 0; i < tree.getChildCount(); i ++) {
             ParseTree child = tree.getChild(i);
-            if (child instanceof GherkinParser.SentenceContext) {
+            if (child instanceof GherkinParser.LeadSpaceContext) {
+                //skip
+            } else if (child instanceof GherkinParser.SentenceContext) {
                 feature.setSentence(parse((GherkinParser.SentenceContext) child));
             } else if (child instanceof GherkinParser.ScenarioContext) {
                 Scenario scenario = parse((GherkinParser.ScenarioContext) child);
@@ -139,27 +141,17 @@ public class FeatureParser {
      */
     private Sentence parse(GherkinParser.SentenceContext sentenceContext) {
         Sentence sentence = new Sentence();
-        List<String> originalPhraseParts = new ArrayList<>();
-        List<String> templatePhraseParts = new ArrayList<>();
         for (ParseTree child : sentenceContext.children) {
-            originalPhraseParts.add(child.getText());
             if (child instanceof GherkinParser.VariableContext) {
-                templatePhraseParts.add("\\w+");
-
-                if (sentence.getVariables() == null) {
-                    sentence.setVariables(new ArrayList<>());
+                GherkinParser.VariableContext variableContext = (GherkinParser.VariableContext) child;
+                for (ParseTree variableContextChild : variableContext.children) {
+                    if (variableContextChild instanceof GherkinParser.VariableNameContext) {
+                        sentence.getChunks().add(new Variable(variableContextChild.getText()));
+                    }
                 }
-                sentence.getVariables().add(child.getText());
             } else {
-                templatePhraseParts.add(child.getText());
+                sentence.getChunks().add(new Word(child.getText()));
             }
-        }
-
-        sentence.setOriginal(String.join(" ", originalPhraseParts));
-        if (sentence.getVariables() != null && sentence.getVariables().size() > 0) {
-            sentence.setPattern(Pattern.compile(String.join(" ", templatePhraseParts)));
-        } else {
-            sentence.setPattern(Pattern.compile(sentence.getOriginal()));
         }
         return sentence;
     }
