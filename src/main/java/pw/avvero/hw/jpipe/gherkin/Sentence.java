@@ -19,6 +19,17 @@ public class Sentence {
         return value;
     }
 
+    public String getOriginal(Map<String, String> context) {
+        if (context == null || context.size() == 0) return getOriginal();
+
+        String value = chunks.stream()
+                .map(it -> it instanceof Variable
+                        ? context.getOrDefault(it.value, "<" + it.value + ">") : it.value)
+                .map(Objects::toString)
+                .collect(Collectors.joining());
+        return value;
+    }
+
     public Pattern getPattern() {
         String patternValue = chunks.stream()
                 .map(it -> it instanceof Variable ? "(?<" + it.value + ">\\w+)" : it.value)

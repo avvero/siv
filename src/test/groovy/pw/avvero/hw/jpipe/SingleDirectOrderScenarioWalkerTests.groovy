@@ -1,9 +1,11 @@
 package pw.avvero.hw.jpipe
 
 import pw.avvero.hw.jpipe.walker.ScenarioTracker
+import pw.avvero.hw.jpipe.walker.SentenceMatcherResult
 import pw.avvero.hw.jpipe.walker.SingleDirectOrderScenarioWalker
 import spock.lang.Specification
 
+import java.util.function.BiConsumer
 import java.util.function.Consumer
 
 class SingleDirectOrderScenarioWalkerTests extends Specification {
@@ -11,12 +13,13 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
     def "Scenario is completed successfully with single case without context"() {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
-        def completedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), completedBucket)
+        def finishedBucket = new FinishedTrackersBucket()
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        completedBucket.list.completed == [true]
-        completedBucket.list.stepsHits == [[1, 1] as int[]]
+        finishedBucket.list.completed == [true]
+        finishedBucket.list.stepsHits == [[1, 1] as int[]]
         where:
         featureString = """
             Feature: Client registration
@@ -34,7 +37,8 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
         def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
         walker.scenarioTrackers.completed == [false, false]
@@ -56,7 +60,8 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
         def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
         walker.scenarioTrackers.completed == [false]
@@ -77,12 +82,13 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
     def "Scenario is not completed successfully with single case with context"() {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
-        def completedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), completedBucket)
+        def finishedBucket = new FinishedTrackersBucket()
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        completedBucket.list.completed == []
-        completedBucket.list.stepsHits == []
+        finishedBucket.list.completed == []
+        finishedBucket.list.stepsHits == []
         walker.scenarioTrackers.completed == [false, false]
         walker.scenarioTrackers.stepsHits == [[1, 0] as int[], [0, 0] as int[]]
         where:
@@ -101,12 +107,13 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
     def "Scenario is completed successfully with single case with context"() {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
-        def completedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), completedBucket)
+        def finishedBucket = new FinishedTrackersBucket()
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        completedBucket.list.completed == [true]
-        completedBucket.list.stepsHits == [[1, 1] as int[]]
+        finishedBucket.list.completed == [true]
+        finishedBucket.list.stepsHits == [[1, 1] as int[]]
         walker.scenarioTrackers.completed == [false]
         walker.scenarioTrackers.stepsHits == [[0, 0] as int[]]
         where:
@@ -126,7 +133,8 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         when:
         def feature = new FeatureParser().parseFromString(featureString)
         def finishedBucket = new FinishedTrackersBucket()
-        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), finishedBucket)
+        def walker = new SingleDirectOrderScenarioWalker(feature.scenarios.first(), new DummyConsumer(),
+                new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
         finishedBucket.list.completed == [true, true]
@@ -151,6 +159,20 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         @Override
         void accept(ScenarioTracker scenarioTracker) {
             list << scenarioTracker
+        }
+    }
+
+    class DummyConsumer implements Consumer<ScenarioTracker> {
+        @Override
+        void accept(ScenarioTracker scenarioTracker) {
+        }
+    }
+
+    class DummyBiConsumer implements BiConsumer<ScenarioTracker, SentenceMatcherResult> {
+
+        @Override
+        void accept(ScenarioTracker scenarioTracker, SentenceMatcherResult sentenceMatcherResult) {
+
         }
     }
 

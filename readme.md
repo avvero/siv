@@ -5,7 +5,7 @@ Java pipe with graalvm
 ### run
 ```bash
 ./gradlew jar
-java -cp build/libs/jpipe-1.0-SNAPSHOT.jar pw.avvero.hw.jpipe.App
+java -cp build/libs/jpipe-1.0-SNAPSHOT.jar pw.avvero.hw.jpipe.App example.feature
 ```
 
 ## native
