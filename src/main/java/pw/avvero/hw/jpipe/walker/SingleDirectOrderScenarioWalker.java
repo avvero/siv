@@ -18,8 +18,13 @@ public class SingleDirectOrderScenarioWalker {
         trackNewScenario();
     }
 
+    /**
+     * Start new scenario tracker
+     */
     private void trackNewScenario() {
-        scenarioTrackers.add(new ScenarioTracker(this.scenario));
+        if (scenarioTrackers.stream().allMatch(ScenarioTracker::isStarted)) {
+            scenarioTrackers.add(new ScenarioTracker(this.scenario));
+        }
     }
 
     public void pass(String s) {
