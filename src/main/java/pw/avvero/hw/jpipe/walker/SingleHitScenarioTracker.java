@@ -8,8 +8,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Scenario tracker which allows only single hit for step by incoming string, i.e. if step is hit it considered
- * completed and will not be engage in tracking after
+ * Scenario tracker which allows only a single hit for step by incoming string, i.e. if step is hit it considered
+ * completed and will not be engaged in tracking after
  */
 public class SingleHitScenarioTracker {
 

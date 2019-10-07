@@ -2,7 +2,7 @@ package pw.avvero.hw.jpipe;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import pw.avvero.hw.jpipe.gherkin.Feature;
-import pw.avvero.hw.jpipe.walker.SingleDirectOrderScenarioWalker;
+import pw.avvero.hw.jpipe.walker.SingleHitScenarioWalker;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,7 +24,7 @@ public class App {
         console.blueBold("------------------------------------------------------------------------------");
         console.blue(featureWriter.toString(feature));
         console.blueBold("------------------------------------------------------------------------------");
-        SingleDirectOrderScenarioWalker walker = new SingleDirectOrderScenarioWalker(feature.getScenarios().get(0),
+        SingleHitScenarioWalker walker = new SingleHitScenarioWalker(feature.getScenarios().get(0),
                 t -> {
 //                    console.common("New scenario is started: " + t.getScenario().getSentence().getOriginal());
                 },

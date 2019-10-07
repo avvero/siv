@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SingleDirectOrderScenarioWalker {
+public class SingleHitScenarioWalker {
 
     private Scenario scenario;
     private List<SingleHitScenarioTracker> scenarioTrackers = new LinkedList<>();
@@ -15,10 +15,10 @@ public class SingleDirectOrderScenarioWalker {
     private BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onScenarioHit;
     private Consumer<SingleHitScenarioTracker> onScenarioFinish;
 
-    public SingleDirectOrderScenarioWalker(Scenario scenario,
-                                           Consumer<SingleHitScenarioTracker> onScenarioStart,
-                                           BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onScenarioHit,
-                                           Consumer<SingleHitScenarioTracker> onScenarioFinish) {
+    public SingleHitScenarioWalker(Scenario scenario,
+                                   Consumer<SingleHitScenarioTracker> onScenarioStart,
+                                   BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onScenarioHit,
+                                   Consumer<SingleHitScenarioTracker> onScenarioFinish) {
         this.scenario = scenario;
         this.onScenarioStart = onScenarioStart;
         this.onScenarioHit = onScenarioHit;
