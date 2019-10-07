@@ -68,4 +68,8 @@ public class Sentence {
         return chunks;
     }
 
+    @Override
+    public String toString() {
+        return "Sentence{" + "original=" + getOriginal() + ", pattern=" + getPattern() + '}';
+    }
 }

@@ -9,14 +9,17 @@ then        : 'Then:' leadSpace? sentence;
 and         : 'And:' leadSpace? sentence;
 emptyLine   : space + NEWLINE?;
 
-sentence    : (variable | WORD | sign | space)+ ;
+sentence    : (variable | WORD | sign | regExp | space)+ ;
 variable    : '<' variableName '>';
+regExp      : '/' regExpValue '/';
 variableName: WORD;
 sign        : SIGN;
+regExpValue : REGEX;
 space       : SPACE;
 leadSpace   : SPACE;
 
 WORD       : [a-zA-Z0-9'-]+ ;
 SIGN       : [.,:-;(){}_*#^!~%&"?\\+] ;
+REGEX      : [a-zA-Z\\+?[\]]+ ;
 SPACE      : (' ' | '\t')+ ;
 NEWLINE    : ('\n' | '\r' | '\n\r' | '\r\n')+ ;

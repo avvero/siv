@@ -38,19 +38,23 @@ public class App {
         Walker walker = new FeatureWalker(feature, walkerFactory);
         final AtomicLong linePassed = new AtomicLong();
         final AtomicLong lastAffectionTimeNanos = new AtomicLong();
+        final AtomicLong maxAffectionTimeNanos = new AtomicLong();
         new Progress(p -> {
-            console.bottomLine(String.format(">Line passed: %s, last flow impact: %s nanos", linePassed.get(),
-                    lastAffectionTimeNanos));
+            console.bottomLine(String.format(">Line passed: %s; flow impact milis: last %s , max %s;", linePassed.get(),
+                    lastAffectionTimeNanos, maxAffectionTimeNanos));
         }, 100);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String line;
             while (true) {
                 if ((line = reader.readLine()) != null) {
                     linePassed.incrementAndGet();
-                    long startTime = System.nanoTime();
+                    long startTime = System.currentTimeMillis();
                     walker.pass(line);
-                    long timeElapsed = System.nanoTime() - startTime;
+                    long timeElapsed = System.currentTimeMillis() - startTime;
                     lastAffectionTimeNanos.set(timeElapsed);
+                    if (maxAffectionTimeNanos.get() < lastAffectionTimeNanos.get()) {
+                        maxAffectionTimeNanos.set(lastAffectionTimeNanos.get());
+                    }
                 } else {
                     //input finishes
                     break;
@@ -59,6 +63,7 @@ public class App {
         } catch (Exception e) {
             System.err.println(ExceptionUtils.getStackTrace(e));
         }
+        console.endLine("End");
     }
 
     private static int secondsBetween(Date finishedDate, Date startedDate) {

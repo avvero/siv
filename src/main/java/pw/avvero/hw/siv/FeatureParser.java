@@ -149,6 +149,13 @@ public class FeatureParser {
                 sentence.getChunks().add(new Sign(child.getText()));
             } else if (child instanceof GherkinParser.SpaceContext) {
                 sentence.getChunks().add(new Space(child.getText()));
+            } else if (child instanceof GherkinParser.RegExpContext) {
+                GherkinParser.RegExpContext regExpContext = (GherkinParser.RegExpContext) child;
+                for (ParseTree regExpContextChild : regExpContext.children) {
+                    if (regExpContextChild instanceof GherkinParser.RegExpValueContext) {
+                        sentence.getChunks().add(new RegExp(regExpContextChild.getText()));
+                    }
+                }
             } else {
                 sentence.getChunks().add(new Word(child.getText()));
             }

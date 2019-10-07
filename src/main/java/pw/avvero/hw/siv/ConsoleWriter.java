@@ -57,4 +57,9 @@ public class ConsoleWriter {
         System.out.print(CLEAR_LINE);
         System.out.print(bottomLine + "\r");
     }
+
+    public void endLine(String end) {
+        System.out.print(CLEAR_LINE);
+        System.out.println(end);
+    }
 }

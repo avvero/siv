@@ -6,7 +6,10 @@ import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import pw.avvero.hw.siv.antlr.GherkinLexer
 import pw.avvero.hw.siv.antlr.GherkinParser
+import pw.avvero.hw.siv.gherkin.RegExp
+import pw.avvero.hw.siv.gherkin.Space
 import pw.avvero.hw.siv.gherkin.Variable
+import pw.avvero.hw.siv.gherkin.Word
 import spock.lang.Specification
 
 class AntlrGherkinTests extends Specification {
@@ -89,9 +92,24 @@ class AntlrGherkinTests extends Specification {
         f.scenarios[0].sentence.original == "DB call"
         f.scenarios[0].steps[0].sentence.original == "(,9766fe0fcd059,) qtp1709629705-418 jpa:log:1164 - ******* InParams (repository.user_add) *******"
         where:
-        featureString = """Feature: DB call
-  Scenario: DB call
-    When: (,9766fe0fcd059,) qtp1709629705-418 jpa:log:1164 - ******* InParams (repository.user_add) *******"""
+        featureString = """
+        Feature: DB call
+          Scenario: DB call
+            When: (,9766fe0fcd059,) qtp1709629705-418 jpa:log:1164 - ******* InParams (repository.user_add) *******"""
+    }
+
+    def "Feature with regex"() {
+        when:
+        def f = new FeatureParser().parseFromString(featureString)
+        then:
+        f.sentence.original == "DB call"
+        f.scenarios[0].sentence.original == "DB call"
+        f.scenarios[0].steps[0].sentence.original == "foo \\w+ bar"
+        where:
+        featureString = """
+        Feature: DB call
+          Scenario: DB call
+            When: foo /\\w+/ bar"""
     }
 
     def "Parses rises exception if feature has no scenarios"() {

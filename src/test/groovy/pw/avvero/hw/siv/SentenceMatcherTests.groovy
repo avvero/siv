@@ -21,15 +21,13 @@ class SentenceMatcherTests extends Specification {
         matcher.match(sentence, string).matches == matches
         where:
         pattern                                  | string                                 | matches
-//        "foo <v>"                                | "foo bar"                              | true
+        "foo <v>"                                | "foo bar"                              | true
         "foo <v>"                                | "foo  bar"                             | true
-        "foo <v>"                                | "foo   bar"                            | true
         "foo <v> foo"                            | "foo bar foo"                          | true
         "foo <v> foo"                            | "foo  bar  foo"                        | true
         "foo <v> foo"                            | "foobarfoo"                            | false
         "foo <v> foo"                            | "foo bar foo"                          | true
         "foo <v> foo"                            | "foo bar foo too moo"                  | true
-        "foo \\w+ <v> \\w+ foo"                  | "foo ANY bar ANY foo"                  | false
         "foo"                                    | "foo"                                  | true
         "foo"                                    | "foo"                                  | true
         "a.b:c{d}(n) <id>"                       | "a.b:c{d}(n) 12"                       | true
@@ -39,6 +37,13 @@ class SentenceMatcherTests extends Specification {
         "a#b <id>"                               | "a#b 12"                               | true
         "a.bc{d}(n)?s#^!~%^&*( <id>"             | "a.bc{d}(n)?s#^!~%^&*( 10"             | true
         "a.bc{d}(n)?s#^!~%^&*( <id>"             | "a.bc{d}(n)?s#^!~%^&*( 10"             | true
+        "/\\w+/"                                 | "foo"                                  | true
+        "/\\w+/"                                 | "foo bar tar"                          | true
+        "foo /\\w+/"                             | "foo bar tar"                          | true
+        "foo /\\w+?/ tar"                        | "foo bar tar"                          | true
+        "foo /\\w+?/ tar"                        | "foo bar bar"                          | false
+        "bar /\\w+?/ tar"                        | "foo bar tar"                          | false
+        "bar /\\w+/"                             | "foo bar tar"                          | true
     }
 
     @Unroll
@@ -102,14 +107,25 @@ class SentenceMatcherTests extends Specification {
         matcher.match(sentence, string, context as Map).matches == matches
         matcher.match(sentence, string, context as Map).attributes == attributes
         where:
-        pattern              | string            | context       | matches | attributes
-        "id"                 | "id"              | [:]           | true    | [:]
-        "id"                 | "foo"             | [:]           | false   | [:]
-        "id <id>"            | "id 100"          | ["id": "100"] | true    | [:]
-        "id <id>"            | "id 100"          | [:]           | true    | ["id": "100"]
-        "id <id>"            | "id 100"          | ["id": "200"] | false   | [:]
-        "id <id>, key <key>" | "id 100, key foo" | ["id": "100"] | true    | ["key": "foo"]
-        "id <id>, key <key>" | "id 100, key foo" | ["id": "100", "key": "foo"] | true    | [:]
-        "id <id>, key <key>" | "id 100, key foo" | ["id": "100", "key": "bar"] | false   | [:]
+        pattern                             | string                  | context       | matches | attributes
+//        "id"                       | "id"                        | [:]                         | true    | [:]
+//        "id"                       | "foo"                       | [:]                         | false   | [:]
+//        "id <id>"                  | "id 100"                    | ["id": "100"]               | true    | [:]
+//        "id <id>"                  | "id 100"                    | [:]                         | true    | ["id": "100"]
+//        "id <id>"                  | "id 100"                    | ["id": "200"]               | false   | [:]
+//        "id <id>, key <key>"       | "id 100, key foo"           | ["id": "100"]               | true    | ["key": "foo"]
+//        "id <id>, key <key>"       | "id 100, key foo"           | ["id": "100", "key": "foo"] | true    | [:]
+//        "id <id>, key <key>"       | "id 100, key foo"           | ["id": "100", "key": "bar"] | false   | [:]
+        "foo /\\w+?/ tar"                   | "foo bar tar"           | [:]           | true    | [:]
+        "foo /[\\w\\s]+?/ tar"              | "foo bar bar tar"       | [:]           | true    | [:]
+        "foo /[\\w\\s]+?/ tar"              | "foo bar bar tar"       | [:]           | true    | [:]
+        "foo /[\\w\\s]+?/ tar <key>"        | "foo bar bar tar 12"    | [:]           | true    | ["key": "12"]
+        "foo <key> /[\\w\\s]+?/ tar"        | "foo 12 bar bar tar"    | [:]           | true    | ["key": "12"]
+        "foo <key> /[\\w\\s]+?/ tar"        | "foo 12 bar V23 tar"    | [:]           | true    | ["key": "12"]
+        "foo <key> /[\\w\\W]+?/ tar"        | "foo 12 bar *** tar"    | [:]           | true    | ["key": "12"]
+        "foo <key> /.+?/ tar"               | "foo 12 bar *** tar"    | [:]           | true    | ["key": "12"]
+        "foo <key> /[\\w\\s]+?/ tar"        | "foo 12 bar bar tar"    | ["key": "12"] | true    | [:]
+        "foo <key> /[\\w\\s]+?/ tar"        | "foo 12 bar bar tar"    | ["key": "13"] | false   | [:]
+        "foo <key> /[\\w\\s]+?/ tar <key2>" | "foo 12 bar bar tar 13" | ["key": "12"] | true    | ["key2": "13"]
     }
 }
