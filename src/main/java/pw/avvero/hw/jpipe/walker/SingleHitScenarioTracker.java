@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class ScenarioTracker {
+/**
+ * Scenario tracker which allows only single hit for step by incoming string, i.e. if step is hit it considered
+ * completed and will not be engage in tracking after
+ */
+public class SingleHitScenarioTracker {
 
     private Scenario scenario;
     private int currentStepIndex = 0;
@@ -15,15 +19,15 @@ public class ScenarioTracker {
     private boolean completed;
     private HashMap<String, String> context = new HashMap<>();
 
-    public ScenarioTracker(Scenario scenario) {
+    public SingleHitScenarioTracker(Scenario scenario) {
         this.scenario = scenario;
         this.stepsHits = new int[scenario.getSteps().size()];
     }
 
     public boolean hit(String s,
-                       Consumer<ScenarioTracker> onStart,
-                       BiConsumer<ScenarioTracker, SentenceMatcherResult> onHit,
-                       Consumer<ScenarioTracker> onFinish) {
+                       Consumer<SingleHitScenarioTracker> onStart,
+                       BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onHit,
+                       Consumer<SingleHitScenarioTracker> onFinish) {
         if (completed) return false;
 
         Step step = scenario.getSteps().get(currentStepIndex);

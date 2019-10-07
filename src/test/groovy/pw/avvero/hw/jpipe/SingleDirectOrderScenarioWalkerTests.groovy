@@ -1,6 +1,6 @@
 package pw.avvero.hw.jpipe
 
-import pw.avvero.hw.jpipe.walker.ScenarioTracker
+import pw.avvero.hw.jpipe.walker.SingleHitScenarioTracker
 import pw.avvero.hw.jpipe.walker.SentenceMatcherResult
 import pw.avvero.hw.jpipe.walker.SingleDirectOrderScenarioWalker
 import spock.lang.Specification
@@ -175,24 +175,24 @@ class SingleDirectOrderScenarioWalkerTests extends Specification {
         """
     }
 
-    class FinishedTrackersBucket implements Consumer<ScenarioTracker> {
-        List<ScenarioTracker> list = new ArrayList<>()
+    class FinishedTrackersBucket implements Consumer<SingleHitScenarioTracker> {
+        List<SingleHitScenarioTracker> list = new ArrayList<>()
         @Override
-        void accept(ScenarioTracker scenarioTracker) {
+        void accept(SingleHitScenarioTracker scenarioTracker) {
             list << scenarioTracker
         }
     }
 
-    class DummyConsumer implements Consumer<ScenarioTracker> {
+    class DummyConsumer implements Consumer<SingleHitScenarioTracker> {
         @Override
-        void accept(ScenarioTracker scenarioTracker) {
+        void accept(SingleHitScenarioTracker scenarioTracker) {
         }
     }
 
-    class DummyBiConsumer implements BiConsumer<ScenarioTracker, SentenceMatcherResult> {
+    class DummyBiConsumer implements BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> {
 
         @Override
-        void accept(ScenarioTracker scenarioTracker, SentenceMatcherResult sentenceMatcherResult) {
+        void accept(SingleHitScenarioTracker scenarioTracker, SentenceMatcherResult sentenceMatcherResult) {
 
         }
     }

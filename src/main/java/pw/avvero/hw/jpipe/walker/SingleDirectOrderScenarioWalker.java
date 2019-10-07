@@ -10,15 +10,15 @@ import java.util.function.Consumer;
 public class SingleDirectOrderScenarioWalker {
 
     private Scenario scenario;
-    private List<ScenarioTracker> scenarioTrackers = new LinkedList<>();
-    private Consumer<ScenarioTracker> onScenarioStart;
-    private BiConsumer<ScenarioTracker, SentenceMatcherResult> onScenarioHit;
-    private Consumer<ScenarioTracker> onScenarioFinish;
+    private List<SingleHitScenarioTracker> scenarioTrackers = new LinkedList<>();
+    private Consumer<SingleHitScenarioTracker> onScenarioStart;
+    private BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onScenarioHit;
+    private Consumer<SingleHitScenarioTracker> onScenarioFinish;
 
     public SingleDirectOrderScenarioWalker(Scenario scenario,
-                                           Consumer<ScenarioTracker> onScenarioStart,
-                                           BiConsumer<ScenarioTracker, SentenceMatcherResult> onScenarioHit,
-                                           Consumer<ScenarioTracker> onScenarioFinish) {
+                                           Consumer<SingleHitScenarioTracker> onScenarioStart,
+                                           BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onScenarioHit,
+                                           Consumer<SingleHitScenarioTracker> onScenarioFinish) {
         this.scenario = scenario;
         this.onScenarioStart = onScenarioStart;
         this.onScenarioHit = onScenarioHit;
@@ -30,14 +30,14 @@ public class SingleDirectOrderScenarioWalker {
      * Start new scenario tracker
      */
     private void trackNewScenario() {
-        if (scenarioTrackers.stream().allMatch(ScenarioTracker::isStarted)) {
-            scenarioTrackers.add(new ScenarioTracker(this.scenario));
+        if (scenarioTrackers.stream().allMatch(SingleHitScenarioTracker::isStarted)) {
+            scenarioTrackers.add(new SingleHitScenarioTracker(this.scenario));
         }
     }
 
     public void pass(String s) {
         if (s == null || "".equals(s.trim())) return;
-        for (ScenarioTracker scenarioTracker : scenarioTrackers) {
+        for (SingleHitScenarioTracker scenarioTracker : scenarioTrackers) {
             boolean hit = scenarioTracker.hit(
                     s,
                     this::onScenarioStart,
@@ -48,16 +48,16 @@ public class SingleDirectOrderScenarioWalker {
         }
     }
 
-    private void onScenarioStart(ScenarioTracker scenarioTracker) {
+    private void onScenarioStart(SingleHitScenarioTracker scenarioTracker) {
         trackNewScenario();
         onScenarioStart.accept(scenarioTracker);
     }
 
-    private void onScenarioHit(ScenarioTracker scenarioTracker, SentenceMatcherResult result) {
+    private void onScenarioHit(SingleHitScenarioTracker scenarioTracker, SentenceMatcherResult result) {
         onScenarioHit.accept(scenarioTracker, result);
     }
 
-    private void onScenarioFinish(ScenarioTracker scenarioTracker) {
+    private void onScenarioFinish(SingleHitScenarioTracker scenarioTracker) {
         scenarioTrackers.remove(scenarioTracker);
         // redundant, need to check is there any not started trackers
         trackNewScenario();
