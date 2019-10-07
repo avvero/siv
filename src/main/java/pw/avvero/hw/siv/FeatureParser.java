@@ -136,7 +136,7 @@ public class FeatureParser {
      * @return
      */
     private Sentence parse(GherkinParser.SentenceContext sentenceContext) {
-        Sentence sentence = new Sentence();
+        Sentence sentence = new CacheableSentence();
         for (ParseTree child : sentenceContext.children) {
             if (child instanceof GherkinParser.VariableContext) {
                 GherkinParser.VariableContext variableContext = (GherkinParser.VariableContext) child;
