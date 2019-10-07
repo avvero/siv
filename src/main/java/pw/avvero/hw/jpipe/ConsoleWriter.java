@@ -30,21 +30,31 @@ public class ConsoleWriter {
     public static final String CYAN_BACKGROUND = "\u001B[46m";
     public static final String WHITE_BACKGROUND = "\u001B[47m";
 
-    public void common(String s){
+    public static final String CLEAR_LINE = "                                                                                  \r";
+    private String bottomLine = "";
+
+    public void newLine(String s){
+        System.out.print(CLEAR_LINE);
         System.out.println(s);
+        System.out.print(bottomLine + "\r");
     }
 
-    public void green(String s) {
-        common(GREEN + s + RESET);
+    public void newLineGreen(String s) {
+        newLine(GREEN + s + RESET);
     }
-    public void greenBold(String s) {
-        common(GREEN_BOLD + s + RESET);
+    public void newLineGreenBold(String s) {
+        newLine(GREEN_BOLD + s + RESET);
     }
-    public void blue(String s) {
-        common(BLUE + s + RESET);
+    public void newLineBlue(String s) {
+        newLine(BLUE + s + RESET);
     }
-    public void blueBold(String s) {
-        common(BLUE_BOLD + s + RESET);
+    public void newLineBlueBold(String s) {
+        newLine(BLUE_BOLD + s + RESET);
     }
 
+    public void bottomLine(String s) {
+        bottomLine = s;
+        System.out.print(CLEAR_LINE);
+        System.out.print(bottomLine + "\r");
+    }
 }

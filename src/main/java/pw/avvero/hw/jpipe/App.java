@@ -6,44 +6,50 @@ import pw.avvero.hw.jpipe.walker.SingleHitScenarioWalker;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class App {
     
     private static ConsoleWriter console = new ConsoleWriter();
 
     public static void main(String... args) throws Exception {
-        console.common("App is started with args: " + String.join(", ", args));
+        console.newLine("App is started with args: " + String.join(", ", args));
         if (args.length == 0) {
-            throw new Exception("Please specify feature file");
+            throw new IllegalArgumentException("Please specify feature file");
         }
         String featureFile = args[0];
-        console.common("Feature file is: " + featureFile);
-        console.common("");
+        console.newLine("Feature file is: " + featureFile);
         Feature feature = new FeatureParser().parseFromFile(featureFile);
         FeatureWriter featureWriter = new FeatureWriter();
-        console.blueBold("------------------------------------------------------------------------------");
-        console.blue(featureWriter.toString(feature));
-        console.blueBold("------------------------------------------------------------------------------");
+        console.newLineBlueBold("------------------------------------------------------------------------------");
+        console.newLineBlue(featureWriter.toString(feature));
+        console.newLineBlueBold("------------------------------------------------------------------------------");
         SingleHitScenarioWalker walker = new SingleHitScenarioWalker(feature.getScenarios().get(0),
+                t -> {},
+                (t, s) -> {},
                 t -> {
-//                    console.common("New scenario is started: " + t.getScenario().getSentence().getOriginal());
-                },
-                (t, s) -> {
-//                    console.common(String.format("Hit sentence: \n    >%s\n    >%s",
-//                            s.getSentence().getOriginal(), s.getString()));
-                },
-                t -> {
-                    console.greenBold("\nFINISHED:");
-                    console.green(featureWriter.toString(t.getScenario(), t.getContext()));
-//                    console.greenBold("\n");
+                    console.newLineGreenBold(String.format("FINISHED in %s second(s):", secondsBetween(
+                            t.getFinishedDate(), t.getStartedDate())));
+                    console.newLineGreen(featureWriter.toString(t.getScenario(), t.getContext()));
                 });
 
+        final AtomicLong linePassed = new AtomicLong();
+        final AtomicLong lastAffectionTimeNanos = new AtomicLong();
+        new Progress(p -> {
+            console.bottomLine(String.format(">Line passed: %s, last flow impact: %s nanos", linePassed.get(),
+                    lastAffectionTimeNanos));
+        }, 100);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String line;
             while (true) {
                 if ((line = reader.readLine()) != null) {
+                    linePassed.incrementAndGet();
+                    long startTime = System.nanoTime();
                     walker.pass(line);
-//                    console.common("echo>> " + line);
+                    long timeElapsed = System.nanoTime() - startTime;
+                    lastAffectionTimeNanos.set(timeElapsed);
                 } else {
                     //input finishes
                     break;
@@ -52,7 +58,10 @@ public class App {
         } catch (Exception e) {
             System.err.println(ExceptionUtils.getStackTrace(e));
         }
-        console.common("\n");
+    }
+
+    private static int secondsBetween(Date finishedDate, Date startedDate) {
+        return (int) ((finishedDate.getTime() - startedDate.getTime()) / 1000);
     }
 
 }

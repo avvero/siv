@@ -41,7 +41,7 @@ class MultiHitScenarioTrackerTests extends Specification {
         then:
         finishedBucket.list.completed == [true]
         finishedBucket.list.stepsHits == [[1, 2] as int[]]
-        walker.scenarioTrackers.completed == [false]
+        walker.scenarioTrackers.finished == [false]
         walker.scenarioTrackers.stepsHits == [[0, 0] as int[]]
         where:
         featureString = """

@@ -14,7 +14,7 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.completed == [true]
+        finishedBucket.list.finished == [true]
         finishedBucket.list.stepsHits == [[1, 1] as int[]]
         where:
         featureString = """
@@ -37,7 +37,7 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.completed == [true]
+        finishedBucket.list.finished == [true]
         finishedBucket.list.stepsHits == [[1] as int[]]
         where:
         featureString = """
@@ -58,7 +58,7 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        walker.scenarioTrackers.completed == [false, false]
+        walker.scenarioTrackers.finished == [false, false]
         walker.scenarioTrackers.stepsHits == [[1, 0] as int[], [0, 0] as int[]]
         where:
         featureString = """
@@ -81,7 +81,7 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        walker.scenarioTrackers.completed == [false]
+        walker.scenarioTrackers.finished == [false]
         walker.scenarioTrackers.stepsHits == [[0, 0] as int[]]
         where:
         featureString = """
@@ -104,9 +104,9 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.completed == []
+        finishedBucket.list.finished == []
         finishedBucket.list.stepsHits == []
-        walker.scenarioTrackers.completed == [false, false]
+        walker.scenarioTrackers.finished == [false, false]
         walker.scenarioTrackers.stepsHits == [[1, 0] as int[], [0, 0] as int[]]
         where:
         featureString = """
@@ -129,9 +129,9 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.completed == [true]
+        finishedBucket.list.finished == [true]
         finishedBucket.list.stepsHits == [[1, 1] as int[]]
-        walker.scenarioTrackers.completed == [false]
+        walker.scenarioTrackers.finished == [false]
         walker.scenarioTrackers.stepsHits == [[0, 0] as int[]]
         where:
         featureString = """
@@ -154,7 +154,7 @@ class SingleHitScenarioTrackerTests extends Specification {
                 new DummyBiConsumer(), finishedBucket)
         log.split("\n").each { l -> walker.pass(l)}
         then:
-        finishedBucket.list.completed == [true, true]
+        finishedBucket.list.finished == [true, true]
         finishedBucket.list.stepsHits == [[1, 1] as int[], [1, 1] as int[]]
         where:
         featureString = """

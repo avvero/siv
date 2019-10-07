@@ -3,6 +3,7 @@ package pw.avvero.hw.jpipe.walker;
 import pw.avvero.hw.jpipe.gherkin.Scenario;
 import pw.avvero.hw.jpipe.gherkin.Step;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -16,8 +17,10 @@ public class SingleHitScenarioTracker {
     private Scenario scenario;
     private int currentStepIndex = 0;
     private int[] stepsHits;
-    private boolean completed;
+    private boolean finished;
     private HashMap<String, String> context = new HashMap<>();
+    private Date startedDate;
+    private Date finishedDate;
 
     public SingleHitScenarioTracker(Scenario scenario) {
         this.scenario = scenario;
@@ -28,7 +31,7 @@ public class SingleHitScenarioTracker {
                        Consumer<SingleHitScenarioTracker> onStart,
                        BiConsumer<SingleHitScenarioTracker, SentenceMatcherResult> onHit,
                        Consumer<SingleHitScenarioTracker> onFinish) {
-        if (completed) return false;
+        if (finished) return false;
 
         Step step = scenario.getSteps().get(currentStepIndex);
         SentenceMatcherResult matchResult = SentenceMatcher.getInstance().match(step.getSentence(), s, context);
@@ -43,10 +46,12 @@ public class SingleHitScenarioTracker {
             this.stepsHits[hitIndex] = 1;
             onHit.accept(this, matchResult);
             if (hitIndex == 0) {
+                startedDate = new Date();
                 onStart.accept(this);
             }
             if (hitIndex == scenario.getSteps().size() - 1) {
-                completed = true;
+                finished = true;
+                finishedDate = new Date();
                 onFinish.accept(this);
             }
         }
@@ -57,8 +62,8 @@ public class SingleHitScenarioTracker {
         return stepsHits;
     }
 
-    public boolean isCompleted() {
-        return completed;
+    public boolean isFinished() {
+        return finished;
     }
 
     public boolean isStarted() {
@@ -71,5 +76,13 @@ public class SingleHitScenarioTracker {
 
     public HashMap<String, String> getContext() {
         return context;
+    }
+
+    public Date getStartedDate() {
+        return startedDate;
+    }
+
+    public Date getFinishedDate() {
+        return finishedDate;
     }
 }
