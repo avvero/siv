@@ -2,12 +2,15 @@ package pw.avvero.hw.jpipe;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import pw.avvero.hw.jpipe.gherkin.Feature;
-import pw.avvero.hw.jpipe.walker.SingleHitScenarioWalker;
+import pw.avvero.hw.jpipe.gherkin.Scenario;
+import pw.avvero.hw.jpipe.walker.FeatureWalker;
+import pw.avvero.hw.jpipe.walker.SingleHitScenarioWalkerFactory;
+import pw.avvero.hw.jpipe.walker.Walker;
+import pw.avvero.hw.jpipe.walker.WalkerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class App {
@@ -26,15 +29,13 @@ public class App {
         console.newLineBlueBold("------------------------------------------------------------------------------");
         console.newLineBlue(featureWriter.toString(feature));
         console.newLineBlueBold("------------------------------------------------------------------------------");
-        SingleHitScenarioWalker walker = new SingleHitScenarioWalker(feature.getScenarios().get(0),
-                t -> {},
-                (t, s) -> {},
+        WalkerFactory<Scenario> walkerFactory = new SingleHitScenarioWalkerFactory(t -> {}, (t, s) -> {},
                 t -> {
                     console.newLineGreenBold(String.format("FINISHED in %s second(s):", secondsBetween(
                             t.getFinishedDate(), t.getStartedDate())));
                     console.newLineGreen(featureWriter.toString(t.getScenario(), t.getContext()));
                 });
-
+        Walker walker = new FeatureWalker(feature, walkerFactory);
         final AtomicLong linePassed = new AtomicLong();
         final AtomicLong lastAffectionTimeNanos = new AtomicLong();
         new Progress(p -> {

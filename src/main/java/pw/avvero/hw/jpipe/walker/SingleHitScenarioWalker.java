@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SingleHitScenarioWalker {
+public class SingleHitScenarioWalker implements Walker<Scenario> {
 
     private Scenario scenario;
     private List<SingleHitScenarioTracker> scenarioTrackers = new LinkedList<>();
