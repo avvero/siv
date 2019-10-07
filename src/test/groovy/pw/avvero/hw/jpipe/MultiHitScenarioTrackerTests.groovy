@@ -16,7 +16,7 @@ class MultiHitScenarioTrackerTests extends Specification {
         log.split("\n").each { l -> walker.pass(l)}
         then:
         finishedBucket.list.completed == [true]
-        finishedBucket.list.stepsHits == [[1, 2] as int[]]
+        finishedBucket.list.stepsHits == [[1, 1] as int[]]
         where:
         featureString = """
             Feature: Client registration
