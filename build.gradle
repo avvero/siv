@@ -31,7 +31,7 @@ compileJava {
 
 jar {
     manifest {
-        attributes "Main-Class": "pw.avvero.hw.jpipe.App"
+        attributes "Main-Class": "pw.avvero.hw.siv.App"
     }
 
     from {
@@ -41,8 +41,8 @@ jar {
 
 generateGrammarSource {
     maxHeapSize = "64m"
-    arguments += ['-package', 'pw.avvero.hw.jpipe.antlr']
-    outputDirectory = new File("${project.buildDir}/generated-src/antlr/main/pw/avvero/hw/jpipe/antlr".toString())
+    arguments += ['-package', 'pw.avvero.hw.siv.antlr']
+    outputDirectory = new File("${project.buildDir}/generated-src/antlr/main/pw/avvero/hw/siv/antlr".toString())
 }
 //compileJava.dependsOn generateGrammarSource
 //sourceSets {
@@ -60,5 +60,5 @@ idea {
     }
 }
 
-graal.outputName("jpipe")
-graal.mainClass("pw.avvero.hw.jpipe.App")
+graal.outputName("siv")
+graal.mainClass("pw.avvero.hw.siv.App")

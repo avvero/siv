@@ -1,16 +1,14 @@
-# jpipe
-Java pipe with graalvm
+# SIV
+Log sieve which is guided by gherkin scenario.
 
-## java
-### run
+## build and run
+### java
 ```bash
 ./gradlew jar
-java -cp build/libs/jpipe-1.0-SNAPSHOT.jar pw.avvero.hw.jpipe.App example.feature
+java -cp build/libs/siv-1.0-SNAPSHOT.jar pw.avvero.hw.siv.App example.feature
 ```
-
-## native
-### run
+### native
 ```bash
 ./build.sh
-./jpipe
+./siv
 ```
