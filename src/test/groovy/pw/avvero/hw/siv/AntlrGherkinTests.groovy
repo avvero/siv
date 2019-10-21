@@ -32,9 +32,9 @@ class AntlrGherkinTests extends Specification {
         feature.sentence.original == "first feature"
         feature.scenarios[0].sentence.original == "first scenario"
         feature.scenarios[0].steps[0].sentence.original == "first when"
-        feature.scenarios[0].steps[0].sentence.pattern.toString() == "first when"
+        feature.scenarios[0].steps[0].sentence.pattern.toString() == "first\\s+when"
         feature.scenarios[0].steps[1].sentence.original == "then1, 2"
-        feature.scenarios[0].steps[1].sentence.pattern.toString() == "then1, 2"
+        feature.scenarios[0].steps[1].sentence.pattern.toString() == "then1\\,\\s+2"
         feature.scenarios[1].sentence.original == "scenario2"
         feature.scenarios[1].steps[0].sentence.original == "when2"
         feature.scenarios[1].steps[0].sentence.pattern.toString() == "when2"
@@ -63,10 +63,10 @@ class AntlrGherkinTests extends Specification {
         f.sentence.original == "Client registration"
         f.scenarios[0].sentence.original == "Client is registered with account"
         f.scenarios[0].steps[0].sentence.original == "client with id <clientId>"
-        f.scenarios[0].steps[0].sentence.pattern.toString() == "client with id (?<clientId>[\\w-]+)"
+        f.scenarios[0].steps[0].sentence.pattern.toString() == "client\\s+with\\s+id\\s+(?<clientId>[\\w-]+)"
         f.scenarios[0].steps[0].sentence.variables == [new Variable("clientId")]
         f.scenarios[0].steps[1].sentence.original == "account <accountId> is created for client <clientId>"
-        f.scenarios[0].steps[1].sentence.pattern.toString() == "account (?<accountId>[\\w-]+) is created for client (?<clientId>[\\w-]+)"
+        f.scenarios[0].steps[1].sentence.pattern.toString() == "account\\s+(?<accountId>[\\w-]+)\\s+is\\s+created\\s+for\\s+client\\s+(?<clientId>[\\w-]+)"
         f.scenarios[0].steps[1].sentence.variables == [new Variable("accountId"), new Variable("clientId")]
     }
 

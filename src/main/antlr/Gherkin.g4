@@ -9,7 +9,7 @@ then        : 'Then:' leadSpace? sentence;
 and         : 'And:' leadSpace? sentence;
 emptyLine   : space + NEWLINE?;
 
-sentence    : (variable | WORD | sign | regExp | space)+ ;
+sentence    : (variable | WORD | regExp | sign | space)+ ;
 variable    : '<' variableName '>';
 regExp      : '/' regExpValue '/';
 variableName: WORD;
@@ -19,7 +19,7 @@ space       : SPACE;
 leadSpace   : SPACE;
 
 WORD       : [a-zA-Z0-9'-]+ ;
-SIGN       : [.,:-;(){}_*#^!~%&"?\\+] ;
+SIGN       : [.,:-;(){}_*#^!~%&"?\\+/] ;
 REGEX      : [a-zA-Z\\+?[\]]+ ;
 SPACE      : (' ' | '\t')+ ;
 NEWLINE    : ('\n' | '\r' | '\n\r' | '\r\n')+ ;

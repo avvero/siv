@@ -1,0 +1,10 @@
+TRACE Client with id 1001 is registered
+TRACE Foo process
+TRACE Client with id 1002 is registered
+TRACE Foo process
+TRACE Bar process
+TRACE Account with id 21 is created for client with id 1001
+TRACE Account with id 22 is created for client with id 1002
+TRACE Bar process
+TRACE Client with id 1003 is registered
+TRACE Account with id 21 is funded on 100 USD

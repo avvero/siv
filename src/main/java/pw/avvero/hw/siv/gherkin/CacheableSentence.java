@@ -46,9 +46,4 @@ public class CacheableSentence extends Sentence {
     private String getCacheKeyFrom(Map<String, String> map) {
         return map.entrySet().stream().map(e -> e.getKey() + "_" + e.getValue()).collect(Collectors.joining("_"));
     }
-
-    @Override
-    public String toString() {
-        return "Sentence{" + "original=" + getOriginal() + ", pattern=" + getPattern() + '}';
-    }
 }

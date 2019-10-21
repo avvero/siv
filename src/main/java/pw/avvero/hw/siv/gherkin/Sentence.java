@@ -1,9 +1,8 @@
 package pw.avvero.hw.siv.gherkin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -36,10 +35,7 @@ public class Sentence {
     }
 
     public Pattern getPattern() {
-        String patternValue = chunks.stream()
-                .map(it -> it instanceof Variable ? format(VARIABLE_P, it.value) : it.value)
-                .collect(Collectors.joining());
-        return Pattern.compile(patternValue);
+        return getPattern(Collections.emptyMap());
     }
 
     public Pattern getPattern(Map<String, String> context) {
@@ -70,6 +66,11 @@ public class Sentence {
 
     @Override
     public String toString() {
-        return "Sentence{" + "original=" + getOriginal() + ", pattern=" + getPattern() + '}';
+        try {
+            return "Sentence{" + "original=" + getOriginal() + ", pattern=" + getPattern() + '}';
+        } catch (Throwable t) {
+            System.out.println(ExceptionUtils.getStackTrace(t));
+            return super.toString();
+        }
     }
 }
