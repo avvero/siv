@@ -11,7 +11,7 @@ import static java.lang.String.format;
 public class Sentence {
 
     private static final String VARIABLE_T = "<%s>";
-    private static final String VARIABLE_P = "(?<%s>[\\w-]+)";
+    private static final String VARIABLE_P = "(?<%s>[\\w-.]+)";
 
     private List<SentenceChunk> chunks = new ArrayList<>();
 

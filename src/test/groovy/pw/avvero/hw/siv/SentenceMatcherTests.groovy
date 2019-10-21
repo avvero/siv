@@ -143,4 +143,21 @@ class SentenceMatcherTests extends Specification {
         "foo <key> /[\\w\\s]+?/ tar"        | "foo 12 bar bar tar"    | ["key": "13"]               | false   | [:]
         "foo <key> /[\\w\\s]+?/ tar <key2>" | "foo 12 bar bar tar 13" | ["key": "12"]               | true    | ["key2": "13"]
     }
+
+    @Unroll
+    def "String #string contains attributes #attributes"() {
+        when:
+        def matcher = new SentenceMatcher()
+        def sentence = getSentence(pattern)
+        then:
+        matcher.match(sentence, string, [:] as Map).matches
+        matcher.match(sentence, string, [:] as Map).attributes == attributes
+        where:
+        pattern                             | string                  | attributes
+        "id"                                | "id"                    | [:]
+        "id <id>"                           | "id 100"                | ["id": "100"]
+        "id <id>, key <key>"                | "id 100, key foo"       | ["id": "100", "key": "foo"]
+        "foo <key> /[\\w\\s]+?/ tar <key2>" | "foo 12 bar bar tar 13" | ["key2": "13", "key": "12"]
+        "id <id>"                           | "id 100.12"             | ["id": "100.12"]
+    }
 }

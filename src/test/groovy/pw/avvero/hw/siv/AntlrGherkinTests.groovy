@@ -63,10 +63,10 @@ class AntlrGherkinTests extends Specification {
         f.sentence.original == "Client registration"
         f.scenarios[0].sentence.original == "Client is registered with account"
         f.scenarios[0].steps[0].sentence.original == "client with id <clientId>"
-        f.scenarios[0].steps[0].sentence.pattern.toString() == "client\\s+with\\s+id\\s+(?<clientId>[\\w-]+)"
+        f.scenarios[0].steps[0].sentence.pattern.toString() == "client\\s+with\\s+id\\s+(?<clientId>[\\w-.]+)"
         f.scenarios[0].steps[0].sentence.variables == [new Variable("clientId")]
         f.scenarios[0].steps[1].sentence.original == "account <accountId> is created for client <clientId>"
-        f.scenarios[0].steps[1].sentence.pattern.toString() == "account\\s+(?<accountId>[\\w-]+)\\s+is\\s+created\\s+for\\s+client\\s+(?<clientId>[\\w-]+)"
+        f.scenarios[0].steps[1].sentence.pattern.toString() == "account\\s+(?<accountId>[\\w-.]+)\\s+is\\s+created\\s+for\\s+client\\s+(?<clientId>[\\w-.]+)"
         f.scenarios[0].steps[1].sentence.variables == [new Variable("accountId"), new Variable("clientId")]
     }
 
