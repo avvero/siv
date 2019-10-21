@@ -95,4 +95,34 @@ class FeatureWalkerTests extends Specification {
         """
     }
 
+    def "Single Scenarios are completed successfully with the same starting point"() {
+        when:
+        def finishedBucket = new FinishedTrackersBucket()
+
+        def feature = new FeatureParser().parseFromString(featureString)
+        def factory = new SingleHitScenarioWalkerFactory(new DummyConsumer(), new DummyBiConsumer(), finishedBucket)
+        def walker = new FeatureWalker(feature, factory)
+        log.split("\n").each { l -> walker.pass(l)}
+        then:
+        finishedBucket.list.finished == [true, true]
+        finishedBucket.list.stepsHits == [[1, 1] as int[], [1, 1] as int[]]
+        walker.walkers.scenarioTrackers.finished == [[false], [false]]
+        walker.walkers.scenarioTrackers.stepsHits == [[[0, 0] as int[]], [[0, 0] as int[]]]
+        where:
+        featureString = """
+                Feature: Registration
+                  Scenario: Successful
+                    When: <type> registration request for client: <clientId>, reference: <reference>
+                    And: Registration request <reference> is completed
+                  Scenario: Unsuccessful
+                    When: <type> registration request for client: <clientId>, reference: <reference>
+                    And: Registration request <reference> will not be precessed because of restrictions
+        """
+        log = """
+        Demo registration request for client: 7149027, reference: 2000000000000000010489935
+        Registration request 2000000000000000010489935 will not be precessed because of restrictions:
+        Registration request 2000000000000000010489935 is completed, ShuftiPro response: request.pending
+        """
+    }
+
 }
