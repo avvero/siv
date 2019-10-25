@@ -140,22 +140,16 @@ public class FeatureParser {
         for (ParseTree child : sentenceContext.children) {
             if (child instanceof GherkinParser.VariableContext) {
                 GherkinParser.VariableContext variableContext = (GherkinParser.VariableContext) child;
-                for (ParseTree variableContextChild : variableContext.children) {
-                    if (variableContextChild instanceof GherkinParser.VariableNameContext) {
-                        sentence.getChunks().add(new Variable(variableContextChild.getText()));
-                    }
-                }
+                String sbs = variableContext.getText().substring(1, variableContext.getText().length() - 1);
+                sentence.getChunks().add(new Variable(sbs));
             } else if (child instanceof GherkinParser.SignContext) {
                 sentence.getChunks().add(new Sign(child.getText()));
             } else if (child instanceof GherkinParser.SpaceContext) {
                 sentence.getChunks().add(new Space(child.getText()));
             } else if (child instanceof GherkinParser.RegExpContext) {
                 GherkinParser.RegExpContext regExpContext = (GherkinParser.RegExpContext) child;
-                for (ParseTree regExpContextChild : regExpContext.children) {
-                    if (regExpContextChild instanceof GherkinParser.RegExpValueContext) {
-                        sentence.getChunks().add(new RegExp(regExpContextChild.getText()));
-                    }
-                }
+                String sbs = regExpContext.getText().substring(1, regExpContext.getText().length() - 1);
+                sentence.getChunks().add(new RegExp(sbs));
             } else {
                 sentence.getChunks().add(new Word(child.getText()));
             }

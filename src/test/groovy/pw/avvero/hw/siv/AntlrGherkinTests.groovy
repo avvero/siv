@@ -11,6 +11,7 @@ import pw.avvero.hw.siv.gherkin.Space
 import pw.avvero.hw.siv.gherkin.Variable
 import pw.avvero.hw.siv.gherkin.Word
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class AntlrGherkinTests extends Specification {
 
@@ -110,6 +111,21 @@ class AntlrGherkinTests extends Specification {
         Feature: DB call
           Scenario: DB call
             When: foo /\\w+/ bar"""
+    }
+
+    @Unroll
+    def "Sentence with / sign"() {
+        when:
+        def f = new FeatureParser().parseFromString(featureString)
+        then:
+        f.sentence.original == "DB call"
+        f.scenarios[0].sentence.original == "DB call"
+        f.scenarios[0].steps[0].sentence.original == "foo / bar"
+        where:
+        featureString = """
+        Feature: DB call
+          Scenario: DB call
+            When: foo / bar"""
     }
 
     def "Parses rises exception if feature has no scenarios"() {

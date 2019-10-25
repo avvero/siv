@@ -49,7 +49,7 @@ class SentenceMatcherTests extends Specification {
     }
 
     @Unroll
-    def "String `#string` matches(#matches) itself"() {
+    def "String `#string` matches itself"() {
         when:
         def matcher = new SentenceMatcher()
         def sentence = getSentence(string)
@@ -70,6 +70,11 @@ class SentenceMatcherTests extends Specification {
         "a.bc{d}(n)?s#^!~%^&*( "    | _
         "a.b:c{d}(n)?s#^!~%^&*( "   | _
         "a.b:c{d}(n)?\\s#^!~%^&*( " | _
+        "a-b"                       | _
+        "a=b"                       | _
+        "a/b"                       | _
+        "a<b"                       | _
+        "a>b"                       | _
     }
 
     @Unroll
@@ -127,6 +132,8 @@ class SentenceMatcherTests extends Specification {
         "id"                                | "foo"                   | [:]                         | false   | [:]
         "id <id>"                           | "id 100"                | ["id": "100"]               | true    | [:]
         "id <id>"                           | "id 100"                | [:]                         | true    | ["id": "100"]
+        "id = <id>"                         | "id = 100"              | [:]                         | true    | ["id": "100"]
+        "id / <id>"                         | "id / 100"              | [:]                         | true    | ["id": "100"]
         "id <id>"                           | "id 100"                | ["id": "200"]               | false   | [:]
         "id <id>, key <key>"                | "id 100, key foo"       | ["id": "100"]               | true    | ["key": "foo"]
         "id <id>, key <key>"                | "id 100, key foo"       | ["id": "100", "key": "foo"] | true    | [:]
